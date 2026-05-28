@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DevPath – Jalur Belajar Coding Kamu</title>
+  <meta name="description" content="DevPath adalah platform belajar coding interaktif untuk siswa kelas 10. Ikuti roadmap, kerjakan kuis, dan jaga Daily Streak-mu!"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* ── Dashboard Extra ── */
+    .streak-card small { color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block; }
+
+    /* Animate streak number when it increments */
+    @keyframes streak-pop {
+      0%   { transform: scale(1); }
+      50%  { transform: scale(1.25); color: var(--orange); }
+      100% { transform: scale(1); }
+    }
+    .streak-pop { animation: streak-pop .5s ease; }
+
+    /* Level progress bar in stat card */
+    .level-prog-wrap { width: 100%; height: 5px; background: var(--surface2); border-radius: 50px; margin-top: 6px; overflow: hidden; }
+    .level-prog-fill { height: 100%; border-radius: 50px; background: linear-gradient(90deg, var(--teal), #7defe6); transition: width .8s ease; }
+    .level-next-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; }
+
+    /* Daily status badge */
+    .daily-status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 14px; border-radius: 50px; font-size: 0.78rem; font-weight: 700;
+      margin-top: 4px;
+    }
+    .daily-done-badge { background: rgba(87,204,153,.18); color: var(--green); border: 1px solid rgba(87,204,153,.3); }
+    .daily-pending-badge { background: rgba(244,162,97,.15); color: var(--orange); border: 1px solid rgba(244,162,97,.3); animation: pulse-border 2s infinite; }
+    @keyframes pulse-border { 0%,100%{box-shadow:0 0 0 0 rgba(244,162,97,.35)} 50%{box-shadow:0 0 0 5px rgba(244,162,97,0)} }
+
+    /* Stats strip */
+    .dash-stats-strip {
+      display: grid; grid-template-columns: repeat(4,1fr); gap: 14px;
+      padding: 0 32px 16px;
+    }
+    .stat-strip-card {
+      background: var(--surface); border-radius: 14px; padding: 18px 20px;
+      border: 1px solid var(--border); display: flex; align-items: center; gap: 14px;
+      transition: transform .3s, box-shadow .3s;
+    }
+    .stat-strip-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,.3); }
+    .stat-strip-icon { font-size: 1.8rem; }
+    .stat-strip-val { font-size: 1.4rem; font-weight: 900; line-height: 1; }
+    .stat-strip-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
+
+    @media (max-width: 900px) {
+      .dash-stats-strip { grid-template-columns: repeat(2,1fr); padding: 0 20px 16px; }
+    }
+    @media (max-width: 540px) {
+      .dash-stats-strip { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-fire">🔥</span>
+      <span class="logo-text">Dev<span class="logo-accent">Path</span></span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidelink active" id="nav-home">
+        <span class="sidelink-icon">🏠</span><span>Dashboard</span>
+      </a>
+      <a href="roadmap.html" class="sidelink" id="nav-roadmap">
+        <span class="sidelink-icon">🗺️</span><span>The Roadmap</span>
+      </a>
+      <a href="quiz.html" class="sidelink" id="nav-quiz">
+        <span class="sidelink-icon">🎯</span><span>Quiz Center</span>
+      </a>
+      <a href="daily.html" class="sidelink" id="nav-daily">
+        <span class="sidelink-icon">⚡</span><span>Daily Challenge</span>
+      </a>
+    </nav>
+    <div class="sidebar-stats">
+      <h4 class="stats-title">Statistik Kamu</h4>
+      <div class="stat-item" id="stat-streak">
+        <span class="stat-icon streak-icon">🔥</span>
+        <div>
+          <div class="stat-val" id="sidebar-streak">0</div>
+          <div class="stat-lbl">Hari Streak</div>
+        </div>
+      </div>
+      <div class="stat-item" id="stat-poin">
+        <span class="stat-icon">⭐</span>
+        <div>
+          <div class="stat-val" id="sidebar-points">0</div>
+          <div class="stat-lbl">Total Poin</div>
+        </div>
+      </div>
+      <div class="stat-item" id="stat-level">
+        <span class="stat-icon">🏆</span>
+        <div>
+          <div class="stat-val" id="sidebar-level">Level 1</div>
+          <div class="stat-lbl" id="sidebar-level-lbl">Newbie</div>
+        </div>
+      </div>
+    </div>
+    <button class="hamburger-close" id="sidebar-close" aria-label="Tutup sidebar">✕</button>
+  </aside>
+
+  <!-- OVERLAY -->
+  <div class="overlay" id="overlay"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="main">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <button class="hamburger" id="hamburger" aria-label="Buka menu">☰</button>
+      <div class="topbar-title">
+        <h1>Dashboard</h1>
+        <span id="topbar-greeting">Selamat datang kembali! 👋</span>
+      </div>
+      <div class="topbar-streak">
+        <span class="fire-badge" id="topbar-streak-badge">🔥 0 Hari</span>
+      </div>
+    </header>
+
+    <!-- HERO GREETING -->
+    <section class="dash-hero" id="dash-hero">
+      <div class="dash-hero-text">
+        <div class="hero-badge-pill">🚀 Jalur Belajar Interaktif</div>
+        <h2>Mulai Hari Ini,<br/><span class="teal-text">Jadi Developer</span> Besok!</h2>
+        <p>Ikuti roadmap, kerjakan kuis harian AI, dan jaga streak-mu. Setiap hari kecil membawa perubahan besar.</p>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;">
+          <a href="roadmap.html" class="btn-teal" id="cta-roadmap">Lihat Roadmap →</a>
+          <a href="daily.html" class="btn-orange" id="cta-daily-hero">⚡ Quiz Harian</a>
+        </div>
+      </div>
+      <div class="dash-hero-visual">
+        <div class="progress-card" id="progress-card">
+          <div class="pcard-header">📈 Progress Belajar</div>
+          <div class="pcard-item">
+            <span>HTML</span>
+            <div class="prog-bar-wrap">
+              <progress id="prog-html" value="0" max="100"></progress>
+            </div>
+            <span class="pct" id="pct-html">0%</span>
+          </div>
+          <div class="pcard-item">
+            <span>CSS</span>
+            <div class="prog-bar-wrap">
+              <progress id="prog-css" value="0" max="100"></progress>
+            </div>
+            <span class="pct" id="pct-css">0%</span>
+          </div>
+          <div class="pcard-item">
+            <span>JavaScript</span>
+            <div class="prog-bar-wrap">
+              <progress id="prog-js" value="0" max="100"></progress>
+            </div>
+            <span class="pct" id="pct-js">0%</span>
+          </div>
+          <div class="pcard-footer" id="level-progress-wrap">
+            <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px;">
+              <span id="level-label-foot">Level 1 – Newbie</span>
+              <span id="level-next-foot" style="color:var(--teal)"></span>
+            </div>
+            <div class="level-prog-wrap"><div class="level-prog-fill" id="level-prog-fill" style="width:0%"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS STRIP -->
+    <section class="dash-stats-strip" id="dash-stats-strip">
+      <div class="stat-strip-card">
+        <span class="stat-strip-icon">🔥</span>
+        <div>
+          <div class="stat-strip-val" id="strip-streak">0</div>
+          <div class="stat-strip-lbl">Hari Streak</div>
+        </div>
+      </div>
+      <div class="stat-strip-card">
+        <span class="stat-strip-icon">⭐</span>
+        <div>
+          <div class="stat-strip-val" id="strip-points">0</div>
+          <div class="stat-strip-lbl">Total Poin</div>
+        </div>
+      </div>
+      <div class="stat-strip-card">
+        <span class="stat-strip-icon">🏆</span>
+        <div>
+          <div class="stat-strip-val" id="strip-level">Lv 1</div>
+          <div class="stat-strip-lbl" id="strip-level-name">Newbie</div>
+        </div>
+      </div>
+      <div class="stat-strip-card">
+        <span class="stat-strip-icon">🎯</span>
+        <div>
+          <div class="stat-strip-val" id="strip-quizzes">0</div>
+          <div class="stat-strip-lbl">Quiz Selesai</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GRID CARDS -->
+    <section class="dash-grid" id="dash-grid">
+
+      <!-- STREAK CARD -->
+      <div class="dcard streak-card" id="card-streak">
+        <div class="dcard-icon streak-big" id="streak-anim">🔥</div>
+        <h3>Daily Streak</h3>
+        <div class="streak-number" id="streak-display">0</div>
+        <p>Hari berturut-turut belajar</p>
+        <div class="streak-mini-row" id="streak-dots"></div>
+        <div id="daily-status-wrap" style="margin-top:4px;"></div>
+      </div>
+
+      <!-- DAILY CHALLENGE PREVIEW -->
+      <div class="dcard challenge-card" id="card-challenge">
+        <div class="dcard-toprow">
+          <span class="badge-orange" id="daily-badge-day">⚡ Hari ini</span>
+          <span class="badge-green">+50 Poin</span>
+        </div>
+        <h3 id="daily-challenge-title">Quiz Harian AI</h3>
+        <p class="challenge-desc" id="daily-challenge-desc">"Jawab 5 soal coding yang dibuat khusus oleh AI Gemini setiap hari. Soal berbeda tiap hari!"</p>
+        <div class="code-preview-box">
+          <span class="c-comm">// 🤖 Gemini AI menghasilkan soal baru</span><br/>
+          <span class="c-comm">// setiap hari secara otomatis</span><br/>
+          <span class="c-tag">const</span> <span class="c-attr">quiz</span> = <span class="c-str">await</span> <span class="c-text">gemini</span>.<span class="c-tag">generate</span>(<br/>
+          &nbsp;&nbsp;<span class="c-str">"Buat 5 soal HTML/CSS/JS"</span><br/>
+          );
+        </div>
+        <a href="daily.html" class="btn-orange" id="cta-daily">Mulai Quiz Harian →</a>
+      </div>
+
+      <!-- QUICK QUIZ -->
+      <div class="dcard quiz-card" id="card-quiz">
+        <div class="dcard-toprow">
+          <span class="badge-teal">🎯 Quiz Center</span>
+          <span class="badge-green">+30–50 Poin</span>
+        </div>
+        <h3>Uji Pemahaman</h3>
+        <p>Selesaikan kuis per topik untuk naik level dan buka materi berikutnya.</p>
+        <div class="quiz-preview" id="quiz-preview-list">
+          <div class="qp-item" id="qp-html">📝 HTML Basics — 5 soal</div>
+          <div class="qp-item" id="qp-css">🎨 CSS Styling — 5 soal</div>
+          <div class="qp-item qp-locked" id="qp-js">🔒 JavaScript — Terkunci</div>
+        </div>
+        <a href="quiz.html" class="btn-teal" id="cta-quiz">Mulai Quiz →</a>
+      </div>
+
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="main-footer" id="footer">
+      <p>© 2026 DevPath · Dibuat dengan ❤️ oleh siswa kelas 10 · Jalur belajar untuk semua</p>
+    </footer>
+
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+  // ── Dashboard-specific extra updates ──
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // Greeting by time
+    const hour = new Date().getHours();
+    const greet = hour < 12 ? 'Selamat pagi! ☀️' : hour < 15 ? 'Selamat siang! 🌤️' : hour < 18 ? 'Selamat sore! 🌅' : 'Selamat malam! 🌙';
+    const greetEl = document.getElementById('topbar-greeting');
+    if (greetEl) greetEl.textContent = greet;
+
+    // Stats strip
+    const streak = dpGetInt('streak', 0);
+    const pts    = dpGetInt('points', 0);
+    const { lv, name, next, nextPts } = getLevel(pts);
+
+    const ss = document.getElementById('strip-streak');
+    const sp = document.getElementById('strip-points');
+    const sl = document.getElementById('strip-level');
+    const sln = document.getElementById('strip-level-name');
+    if (ss) ss.textContent = streak;
+    if (sp) sp.textContent = pts;
+    if (sl) sl.textContent = `Lv ${lv.split(' ')[1]}`;
+    if (sln) sln.textContent = name;
+
+    // Completed quizzes count
+    const cq = JSON.parse(localStorage.getItem('devpath_completed_quizzes') || '[]');
+    const sq = document.getElementById('strip-quizzes');
+    if (sq) sq.textContent = cq.length;
+
+    // Level progress fill in progress card
+    const lvFoot = document.getElementById('level-label-foot');
+    const lvNext = document.getElementById('level-next-foot');
+    const lvFill = document.getElementById('level-prog-fill');
+    if (lvFoot) lvFoot.textContent = `${lv} – ${name}`;
+    if (next) {
+      if (lvNext) lvNext.textContent = `${nextPts} poin lagi → Lv ${parseInt(lv.split(' ')[1]) + 1}`;
+      // Fill = how far from prev threshold to next
+      const thresholds = [0, 50, 100, 200, 350, 500];
+      const lvNum = parseInt(lv.split(' ')[1]) - 1;
+      const prev = thresholds[lvNum] || 0;
+      const pct = Math.min(100, Math.round(((pts - prev) / (next - prev)) * 100));
+      if (lvFill) lvFill.style.width = pct + '%';
+    } else {
+      if (lvNext) lvNext.textContent = '🏆 MAX LEVEL';
+      if (lvFill) lvFill.style.width = '100%';
+    }
+
+    // Quiz preview cards
+    const cats = ['html', 'css', 'javascript'];
+    const qpIds = ['qp-html', 'qp-css', 'qp-js'];
+    const qpLabels = ['📝 HTML Basics — 5 soal', '🎨 CSS Styling — 5 soal', '⚡ JavaScript — 5 soal'];
+    cats.forEach((cat, i) => {
+      const el = document.getElementById(qpIds[i]);
+      if (!el) return;
+      if (cq.includes(cat)) {
+        el.innerHTML = qpLabels[i] + ' ✅';
+        el.classList.remove('qp-locked');
+        el.style.color = 'var(--green)';
+      } else if (i > 0 && !cq.includes(cats[i-1])) {
+        el.textContent = '🔒 ' + (['HTML Basics','CSS Styling','JavaScript'][i]) + ' — Terkunci';
+        el.classList.add('qp-locked');
+      } else {
+        el.textContent = qpLabels[i];
+        el.classList.remove('qp-locked');
+        el.style.color = '';
+      }
+    });
+
+    // Daily status badge
+    const dailyDone = dpGet('daily_done') === new Date().toDateString();
+    const statusWrap = document.getElementById('daily-status-wrap');
+    if (statusWrap) {
+      statusWrap.innerHTML = dailyDone
+        ? `<span class="daily-status-badge daily-done-badge">✅ Quiz harian selesai!</span>`
+        : `<span class="daily-status-badge daily-pending-badge">⭕ Belum dikerjakan hari ini</span>`;
+    }
+  });
+  </script>
+</body>
+</html>

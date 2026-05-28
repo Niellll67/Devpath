@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quiz Center – DevPath</title>
+  <meta name="description" content="Uji pemahamanmu tentang HTML, CSS, dan JavaScript. Jawab kuis untuk naik level di DevPath."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    /* ── QUIZ ENGINE STYLES ── */
+    .quiz-engine-wrap { display: flex; flex-direction: column; gap: 28px; padding: 32px; flex: 1; }
+
+    /* Category Selector */
+    .qcat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .qcat-card {
+      background: var(--surface); border-radius: 18px; padding: 26px 22px;
+      border: 2px solid var(--border); cursor: pointer; text-align: center;
+      transition: border-color .3s, transform .3s, box-shadow .3s;
+      position: relative; overflow: hidden;
+    }
+    .qcat-card:hover:not(.qcat-locked) { border-color: var(--teal); transform: translateY(-4px); box-shadow: 0 10px 32px rgba(42,157,143,.28); }
+    .qcat-card.qcat-locked { opacity: .55; cursor: not-allowed; }
+    .qcat-card.qcat-done { border-color: var(--green); }
+    .qcat-card.qcat-active { border-color: var(--teal); box-shadow: 0 0 0 4px rgba(42,157,143,.18); }
+    .qcat-icon { font-size: 2.6rem; margin-bottom: 10px; }
+    .qcat-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 6px; }
+    .qcat-meta { font-size: 0.82rem; color: var(--text-muted); }
+    .qcat-badge {
+      position: absolute; top: 12px; right: 12px;
+      padding: 3px 10px; border-radius: 50px; font-size: 0.72rem; font-weight: 700;
+    }
+    .qcat-progress-bar {
+      width: 100%; height: 5px; background: var(--surface2); border-radius: 50px;
+      margin-top: 14px; overflow: hidden;
+    }
+    .qcat-progress-fill { height: 100%; border-radius: 50px; background: linear-gradient(90deg,var(--teal),#7defe6); transition: width .5s ease; }
+
+    /* Quiz Engine Panel */
+    .quiz-engine-panel {
+      background: var(--surface); border-radius: 20px; padding: 32px;
+      border: 1px solid var(--border); box-shadow: var(--shadow);
+      display: none; flex-direction: column; gap: 24px;
+    }
+    .quiz-engine-panel.active { display: flex; }
+    .qe-header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+    .qe-title { font-size: 1.2rem; font-weight: 800; }
+    .qe-counter { font-size: 0.9rem; color: var(--text-muted); }
+    .qe-progress-bar { width: 100%; height: 6px; background: var(--surface2); border-radius: 50px; }
+    .qe-progress-fill { height: 100%; border-radius: 50px; background: linear-gradient(90deg,var(--teal),#7defe6); transition: width .4s ease; }
+
+    .qe-question { font-size: 1.08rem; font-weight: 600; line-height: 1.6; padding: 20px; background: var(--surface2); border-radius: 14px; border-left: 4px solid var(--teal); }
+    
+    .qe-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .qe-opt {
+      padding: 14px 18px; background: var(--surface2); border: 2px solid var(--border);
+      border-radius: 12px; cursor: pointer; font-size: 0.95rem; font-weight: 600;
+      text-align: left; display: flex; align-items: center; gap: 12px;
+      transition: border-color .2s, background .2s, transform .2s;
+      font-family: 'Inter', sans-serif; color: var(--text);
+    }
+    .qe-opt:hover:not(:disabled) { border-color: var(--teal); background: rgba(42,157,143,.1); transform: translateX(3px); }
+    .qe-opt .opt-letter {
+      width: 28px; height: 28px; border-radius: 50%; border: 2px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.78rem; font-weight: 800; flex-shrink: 0;
+      transition: background .2s, border-color .2s;
+    }
+    .qe-opt.correct { border-color: var(--green) !important; background: rgba(87,204,153,.18) !important; color: var(--green); }
+    .qe-opt.correct .opt-letter { background: var(--green); border-color: var(--green); color: #003320; }
+    .qe-opt.wrong { border-color: var(--red) !important; background: rgba(230,57,70,.12) !important; color: var(--red); }
+    .qe-opt.wrong .opt-letter { background: var(--red); border-color: var(--red); color: white; }
+    .qe-opt:disabled { cursor: not-allowed; }
+
+    .qe-explanation {
+      display: none; padding: 16px 20px; border-radius: 12px;
+      font-size: 0.92rem; line-height: 1.6; border: 1px solid var(--border);
+    }
+    .qe-explanation.show { display: block; }
+    .qe-explanation.correct-exp { background: rgba(87,204,153,.12); border-color: var(--green); color: var(--green); }
+    .qe-explanation.wrong-exp { background: rgba(230,57,70,.1); border-color: var(--red); color: var(--red); }
+
+    .qe-actions { display: flex; justify-content: space-between; align-items: center; }
+    .btn-next {
+      background: var(--teal); color: white; font-weight: 700; padding: 12px 28px;
+      border-radius: 50px; border: none; cursor: pointer; font-family: 'Inter', sans-serif;
+      font-size: 0.97rem; display: none; align-items: center; gap: 8px;
+      transition: background .3s, transform .3s;
+      box-shadow: 0 4px 18px rgba(42,157,143,.35);
+    }
+    .btn-next.show { display: inline-flex; }
+    .btn-next:hover { background: var(--teal-dark); transform: translateY(-2px); }
+    .btn-quit {
+      background: none; border: 1px solid var(--border); color: var(--text-muted);
+      padding: 10px 20px; border-radius: 50px; cursor: pointer; font-family: 'Inter', sans-serif;
+      font-size: 0.88rem; font-weight: 600; transition: border-color .2s, color .2s;
+    }
+    .btn-quit:hover { border-color: var(--red); color: var(--red); }
+
+    /* Result Panel */
+    .qe-result {
+      display: none; flex-direction: column; align-items: center; gap: 20px;
+      text-align: center; padding: 20px 0;
+    }
+    .qe-result.show { display: flex; }
+    .result-emoji { font-size: 4rem; animation: pop-in .5s cubic-bezier(.36,.07,.19,.97); }
+    @keyframes pop-in { 0%{transform:scale(0) rotate(-10deg)} 70%{transform:scale(1.15) rotate(3deg)} 100%{transform:scale(1)} }
+    .result-title { font-size: 1.7rem; font-weight: 900; }
+    .result-score { font-size: 3rem; font-weight: 900; color: var(--teal); line-height: 1; }
+    .result-sub { color: var(--text-muted); font-size: 0.95rem; }
+    .result-pts-badge {
+      background: rgba(233,196,106,.18); color: var(--yellow); border: 1px solid rgba(233,196,106,.35);
+      padding: 10px 24px; border-radius: 50px; font-size: 1rem; font-weight: 800;
+    }
+    .result-actions { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; margin-top: 8px; }
+
+    @media (max-width: 900px) {
+      .quiz-engine-wrap { padding: 20px; }
+      .qcat-grid { grid-template-columns: 1fr; }
+      .qe-options { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      .qcat-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-fire">🔥</span>
+      <span class="logo-text">Dev<span class="logo-accent">Path</span></span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidelink" id="nav-home"><span class="sidelink-icon">🏠</span><span>Dashboard</span></a>
+      <a href="roadmap.html" class="sidelink" id="nav-roadmap"><span class="sidelink-icon">🗺️</span><span>The Roadmap</span></a>
+      <a href="quiz.html" class="sidelink active" id="nav-quiz"><span class="sidelink-icon">🎯</span><span>Quiz Center</span></a>
+      <a href="daily.html" class="sidelink" id="nav-daily"><span class="sidelink-icon">⚡</span><span>Daily Challenge</span></a>
+    </nav>
+    <div class="sidebar-stats">
+      <h4 class="stats-title">Statistik Kamu</h4>
+      <div class="stat-item"><span class="stat-icon streak-icon">🔥</span><div><div class="stat-val" id="sidebar-streak">0</div><div class="stat-lbl">Hari Streak</div></div></div>
+      <div class="stat-item"><span class="stat-icon">⭐</span><div><div class="stat-val" id="sidebar-points">0</div><div class="stat-lbl">Total Poin</div></div></div>
+      <div class="stat-item"><span class="stat-icon">🏆</span><div><div class="stat-val" id="sidebar-level">Level 1</div><div class="stat-lbl" id="sidebar-level-lbl">Newbie</div></div></div>
+    </div>
+    <button class="hamburger-close" id="sidebar-close" aria-label="Tutup sidebar">✕</button>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <main class="main-content" id="main">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger" aria-label="Buka menu">☰</button>
+      <div class="topbar-title">
+        <h1>Quiz Center</h1>
+        <span>Jawab dengan benar untuk naik level! 🎯</span>
+      </div>
+      <div class="topbar-streak"><span class="fire-badge" id="topbar-streak-badge">🔥 0 Hari</span></div>
+    </header>
+
+    <div class="quiz-engine-wrap">
+
+      <!-- CATEGORY SELECTOR -->
+      <div id="cat-section">
+        <div style="margin-bottom:20px;">
+          <h2 style="font-size:1.3rem;font-weight:800;margin-bottom:6px;">Pilih Kategori Quiz</h2>
+          <p style="color:var(--text-muted);font-size:0.92rem;">Selesaikan setiap quiz untuk membuka kategori berikutnya dan kumpulkan poin!</p>
+        </div>
+        <div class="qcat-grid" id="qcat-grid">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- QUIZ ENGINE PANEL -->
+      <div class="quiz-engine-panel" id="quiz-engine-panel">
+        <div class="qe-header">
+          <div>
+            <div class="qe-title" id="qe-title">Quiz HTML Dasar</div>
+            <div class="qe-counter" id="qe-counter">Soal 1 dari 5</div>
+          </div>
+          <button class="btn-quit" id="btn-quit" onclick="quitQuiz()">✕ Keluar</button>
+        </div>
+        <div class="qe-progress-bar"><div class="qe-progress-fill" id="qe-prog" style="width:0%"></div></div>
+        <div class="qe-question" id="qe-question"></div>
+        <div class="qe-options" id="qe-options"></div>
+        <div class="qe-explanation" id="qe-explanation"></div>
+        <div class="qe-actions">
+          <div id="qe-pts-live" style="font-size:0.9rem;color:var(--teal);font-weight:700;"></div>
+          <button class="btn-next" id="btn-next" onclick="nextQuestion()">Soal Berikutnya →</button>
+        </div>
+        <!-- Result overlay inside panel -->
+        <div class="qe-result" id="qe-result">
+          <div class="result-emoji" id="result-emoji">🎉</div>
+          <div class="result-title" id="result-title">Selesai!</div>
+          <div class="result-score" id="result-score">5/5</div>
+          <div class="result-sub" id="result-sub"></div>
+          <div class="result-pts-badge" id="result-pts-badge">+50 Poin</div>
+          <div class="result-actions">
+            <button class="btn-teal" onclick="retryQuiz()" id="btn-retry">🔄 Ulangi Quiz</button>
+            <button class="btn-orange" onclick="quitQuiz()" id="btn-back-cat">← Pilih Kategori</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <footer class="main-footer" id="footer">
+      <p>© 2026 DevPath · Dibuat dengan ❤️ oleh siswa kelas 10 · Jalur belajar untuk semua</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+  // =============================================
+  // QUIZ ENGINE – quiz.html
+  // =============================================
+
+  const QUIZ_DATA = {
+    html: {
+      id: 'html',
+      title: 'HTML Dasar',
+      icon: '🌐',
+      color: '#E34F26',
+      poin: 30,
+      unlock: null,
+      soal: [
+        {
+          q: 'Tag HTML yang digunakan untuk membuat <strong>judul terbesar</strong> di halaman adalah...',
+          opts: ['<h6>', '<h1>', '<title>', '<head>'],
+          ans: 1,
+          exp: '✅ <h1> adalah heading level 1 — paling besar. Heading turun dari h1 (terbesar) sampai h6 (terkecil).'
+        },
+        {
+          q: 'Atribut yang digunakan pada tag <code>&lt;img&gt;</code> untuk menampilkan teks alternatif jika gambar gagal dimuat adalah...',
+          opts: ['src', 'title', 'alt', 'href'],
+          ans: 2,
+          exp: '✅ Atribut <code>alt</code> (alternative text) menyediakan deskripsi gambar untuk aksesibilitas dan fallback ketika gambar gagal dimuat.'
+        },
+        {
+          q: 'Elemen HTML semantik yang paling tepat untuk membuat menu navigasi utama adalah...',
+          opts: ['<div id="menu">', '<nav>', '<menu>', '<ul>'],
+          ans: 1,
+          exp: '✅ <code>&lt;nav&gt;</code> adalah elemen semantik HTML5 yang secara khusus dirancang untuk wadah navigasi.'
+        },
+        {
+          q: 'Tag HTML yang digunakan untuk membuat <strong>tautan hyperlink</strong> ke halaman lain adalah...',
+          opts: ['<link>', '<a>', '<url>', '<href>'],
+          ans: 1,
+          exp: '✅ Tag <code>&lt;a&gt;</code> (anchor) digunakan untuk membuat hyperlink. Atribut <code>href</code> menentukan tujuan link-nya.'
+        },
+        {
+          q: 'Elemen manakah yang merupakan <strong>block-level element</strong> bawaan HTML?',
+          opts: ['<span>', '<a>', '<strong>', '<div>'],
+          ans: 3,
+          exp: '✅ <code>&lt;div&gt;</code> adalah block-level element. Berbeda dengan <code>&lt;span&gt;</code> yang merupakan inline element.'
+        },
+      ]
+    },
+    css: {
+      id: 'css',
+      title: 'CSS Styling',
+      icon: '🎨',
+      color: '#264DE4',
+      poin: 35,
+      unlock: 'html',
+      soal: [
+        {
+          q: 'Property CSS yang digunakan untuk mengubah <strong>warna teks</strong> adalah...',
+          opts: ['background-color', 'font-color', 'color', 'text-color'],
+          ans: 2,
+          exp: '✅ Property <code>color</code> digunakan untuk mengatur warna teks. <code>background-color</code> untuk warna latar.'
+        },
+        {
+          q: 'Nilai CSS Flexbox yang membuat item rata tengah secara <strong>horizontal</strong> adalah...',
+          opts: ['align-items: center', 'justify-content: center', 'text-align: center', 'margin: auto'],
+          ans: 1,
+          exp: '✅ Di Flexbox, <code>justify-content: center</code> mengatur posisi item di sepanjang sumbu utama (horizontal jika flex-direction: row).'
+        },
+        {
+          q: 'Selector CSS mana yang benar untuk menarget elemen dengan <code>class="kartu"</code>?',
+          opts: ['#kartu', '.kartu', 'kartu', '*kartu'],
+          ans: 1,
+          exp: '✅ Selector class menggunakan titik (.) sebelum nama class. Tanda # digunakan untuk ID, bukan class.'
+        },
+        {
+          q: 'Property CSS yang digunakan untuk memberi jarak <strong>di dalam</strong> elemen (antara konten dan border) adalah...',
+          opts: ['margin', 'spacing', 'padding', 'gap'],
+          ans: 2,
+          exp: '✅ <code>padding</code> adalah jarak di dalam border elemen. <code>margin</code> adalah jarak di luar border (antara elemen).'
+        },
+        {
+          q: 'Untuk membuat teks menjadi <strong>tebal</strong> menggunakan CSS, property yang digunakan adalah...',
+          opts: ['text-style: bold', 'text-weight: bold', 'font-style: bold', 'font-weight: bold'],
+          ans: 3,
+          exp: '✅ <code>font-weight: bold</code> (atau nilai numerik 700) membuat teks tebal. <code>font-style</code> digunakan untuk italic/normal.'
+        },
+      ]
+    },
+    javascript: {
+      id: 'javascript',
+      title: 'JavaScript',
+      icon: '⚡',
+      color: '#F7DF1E',
+      poin: 50,
+      unlock: 'css',
+      soal: [
+        {
+          q: 'Cara yang benar untuk mendeklarasikan variabel yang <strong>tidak bisa diubah nilainya</strong> di JavaScript modern adalah...',
+          opts: ['var nama = "Mia"', 'let nama = "Mia"', 'const nama = "Mia"', 'fixed nama = "Mia"'],
+          ans: 2,
+          exp: '✅ <code>const</code> mendeklarasikan variabel konstan yang nilainya tidak bisa di-reassign. <code>let</code> bisa diubah, <code>var</code> adalah cara lama.'
+        },
+        {
+          q: 'Fungsi JavaScript bawaan untuk memilih elemen HTML berdasarkan <strong>ID</strong>-nya adalah...',
+          opts: ['document.querySelector()', 'document.getElement()', 'document.getElementById()', 'document.findById()'],
+          ans: 2,
+          exp: '✅ <code>document.getElementById("id")</code> mengembalikan elemen dengan ID tertentu. <code>querySelector()</code> lebih fleksibel tapi menggunakan CSS selector.'
+        },
+        {
+          q: 'Apa output dari kode ini? <br><code>console.log(typeof "DevPath")</code>',
+          opts: ['"DevPath"', 'string', 'text', 'undefined'],
+          ans: 1,
+          exp: '✅ <code>typeof</code> mengembalikan tipe data sebagai string. String literal menghasilkan tipe <code>"string"</code>.'
+        },
+        {
+          q: 'Cara yang benar untuk menambahkan event click pada tombol di JavaScript adalah...',
+          opts: ['button.onClick = fungsi', 'button.addEvent("click", fungsi)', 'button.addEventListener("click", fungsi)', 'button.on("click", fungsi)'],
+          ans: 2,
+          exp: '✅ <code>addEventListener("event", callback)</code> adalah cara modern dan direkomendasikan untuk menangani event di JavaScript.'
+        },
+        {
+          q: 'Method array JavaScript yang digunakan untuk <strong>menambah elemen</strong> ke akhir array adalah...',
+          opts: ['array.add()', 'array.append()', 'array.push()', 'array.insert()'],
+          ans: 2,
+          exp: '✅ <code>array.push(item)</code> menambahkan satu atau lebih elemen ke akhir array dan mengembalikan panjang array yang baru.'
+        },
+      ]
+    }
+  };
+
+  // ── State ──
+  let currentCat = null;
+  let currentIdx = 0;
+  let score = 0;
+  let answered = false;
+
+  // ── Load Stats ──
+  function getPoints() { return parseInt(localStorage.getItem('devpath_points') || '0'); }
+  function setPoints(v) { localStorage.setItem('devpath_points', v); }
+  function getStreak() { return parseInt(localStorage.getItem('devpath_streak') || '0'); }
+  function getCompletedQuizzes() {
+    try { return JSON.parse(localStorage.getItem('devpath_completed_quizzes') || '[]'); }
+    catch { return []; }
+  }
+  function setCompletedQuizzes(arr) { localStorage.setItem('devpath_completed_quizzes', JSON.stringify(arr)); }
+  function isUnlocked(catId) {
+    const cat = QUIZ_DATA[catId];
+    if (!cat.unlock) return true;
+    return getCompletedQuizzes().includes(cat.unlock);
+  }
+  function isCompleted(catId) { return getCompletedQuizzes().includes(catId); }
+
+  function getLevel() {
+    const pts = getPoints();
+    if (pts >= 500) return { lv: 'Level 6', name: 'Senior Dev' };
+    if (pts >= 350) return { lv: 'Level 5', name: 'Mid Dev' };
+    if (pts >= 200) return { lv: 'Level 4', name: 'Junior Dev' };
+    if (pts >= 100) return { lv: 'Level 3', name: 'Apprentice' };
+    if (pts >= 50)  return { lv: 'Level 2', name: 'Starter' };
+    return { lv: 'Level 1', name: 'Newbie' };
+  }
+
+  function updateSidebar() {
+    const streak = getStreak();
+    const pts = getPoints();
+    const { lv, name } = getLevel();
+    const sb_s = document.getElementById('sidebar-streak');
+    const sb_p = document.getElementById('sidebar-points');
+    const sb_l = document.getElementById('sidebar-level');
+    const sb_ll = document.getElementById('sidebar-level-lbl');
+    const tb   = document.getElementById('topbar-streak-badge');
+    if (sb_s) sb_s.textContent = streak;
+    if (sb_p) sb_p.textContent = pts;
+    if (sb_l) sb_l.textContent = lv;
+    if (sb_ll) sb_ll.textContent = name;
+    if (tb)  tb.textContent = `🔥 ${streak} Hari`;
+  }
+
+  // ── Render Categories ──
+  function renderCategories() {
+    const grid = document.getElementById('qcat-grid');
+    const completed = getCompletedQuizzes();
+    grid.innerHTML = '';
+    Object.values(QUIZ_DATA).forEach(cat => {
+      const unlocked = isUnlocked(cat.id);
+      const done = isCompleted(cat.id);
+      const card = document.createElement('div');
+      card.className = 'qcat-card' + (done ? ' qcat-done' : '') + (!unlocked ? ' qcat-locked' : '');
+      card.id = `qcat-${cat.id}`;
+
+      let badgeHtml = '';
+      if (done) badgeHtml = `<div class="qcat-badge badge-green">✅ Selesai</div>`;
+      else if (!unlocked) badgeHtml = `<div class="qcat-badge badge-orange">🔒 Terkunci</div>`;
+      else badgeHtml = `<div class="qcat-badge badge-teal">▶ Main</div>`;
+
+      const soalLen = cat.soal.length;
+      const progPct = done ? 100 : 0;
+
+      card.innerHTML = `
+        ${badgeHtml}
+        <div class="qcat-icon">${cat.icon}</div>
+        <div class="qcat-title">${cat.title}</div>
+        <div class="qcat-meta">${soalLen} soal · +${cat.poin} Poin</div>
+        <div class="qcat-progress-bar">
+          <div class="qcat-progress-fill" style="width:${progPct}%"></div>
+        </div>
+      `;
+      if (unlocked) {
+        card.addEventListener('click', () => startQuiz(cat.id));
+      }
+      grid.appendChild(card);
+    });
+  }
+
+  // ── Start Quiz ──
+  function startQuiz(catId) {
+    currentCat = catId;
+    currentIdx = 0;
+    score = 0;
+    answered = false;
+
+    document.getElementById('cat-section').style.display = 'none';
+    const panel = document.getElementById('quiz-engine-panel');
+    panel.classList.add('active');
+    document.getElementById('qe-result').classList.remove('show');
+
+    // show question area
+    document.getElementById('qe-question').style.display = '';
+    document.getElementById('qe-options').style.display = '';
+    document.getElementById('qe-explanation').style.display = '';
+    document.getElementById('qe-actions').style.display = '';
+    document.querySelector('.qe-header').style.display = '';
+    document.querySelector('.qe-progress-bar').style.display = '';
+
+    document.getElementById('qe-title').textContent = `Quiz ${QUIZ_DATA[catId].title}`;
+    renderQuestion();
+  }
+
+  function renderQuestion() {
+    const cat = QUIZ_DATA[currentCat];
+    const soal = cat.soal[currentIdx];
+    const total = cat.soal.length;
+    answered = false;
+
+    document.getElementById('qe-counter').textContent = `Soal ${currentIdx + 1} dari ${total}`;
+    const pct = Math.round((currentIdx / total) * 100);
+    document.getElementById('qe-prog').style.width = pct + '%';
+    document.getElementById('qe-question').innerHTML = soal.q;
+
+    const optsEl = document.getElementById('qe-options');
+    optsEl.innerHTML = '';
+    const letters = ['A', 'B', 'C', 'D'];
+    soal.opts.forEach((opt, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'qe-opt';
+      btn.id = `qeopt-${i}`;
+      btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+      btn.addEventListener('click', () => selectAnswer(i));
+      optsEl.appendChild(btn);
+    });
+
+    const exp = document.getElementById('qe-explanation');
+    exp.className = 'qe-explanation';
+    exp.style.display = 'none';
+    exp.innerHTML = '';
+
+    const next = document.getElementById('btn-next');
+    next.classList.remove('show');
+    next.textContent = currentIdx < total - 1 ? 'Soal Berikutnya →' : 'Lihat Hasil 🏆';
+
+    document.getElementById('qe-pts-live').textContent = `Poin terkumpul: ${score} / ${cat.poin}`;
+  }
+
+  function selectAnswer(idx) {
+    if (answered) return;
+    answered = true;
+    const cat = QUIZ_DATA[currentCat];
+    const soal = cat.soal[currentIdx];
+    const opts = document.querySelectorAll('.qe-opt');
+    const isCorrect = idx === soal.ans;
+
+    opts.forEach((btn, i) => {
+      btn.disabled = true;
+      if (i === soal.ans) btn.classList.add('correct');
+      else if (i === idx && !isCorrect) btn.classList.add('wrong');
+    });
+
+    if (isCorrect) score++;
+
+    const exp = document.getElementById('qe-explanation');
+    exp.style.display = '';
+    exp.className = 'qe-explanation show ' + (isCorrect ? 'correct-exp' : 'wrong-exp');
+    exp.innerHTML = soal.exp;
+
+    document.getElementById('btn-next').classList.add('show');
+    document.getElementById('qe-pts-live').textContent = isCorrect
+      ? `✅ Benar! Poin: ${score}/${cat.soal.length}`
+      : `❌ Salah. Poin: ${score}/${cat.soal.length}`;
+  }
+
+  function nextQuestion() {
+    const total = QUIZ_DATA[currentCat].soal.length;
+    currentIdx++;
+    if (currentIdx >= total) {
+      showResult();
+    } else {
+      renderQuestion();
+    }
+  }
+
+  function showResult() {
+    const cat = QUIZ_DATA[currentCat];
+    const total = cat.soal.length;
+    const pct = Math.round((score / total) * 100);
+
+    // hide question area
+    document.getElementById('qe-question').style.display = 'none';
+    document.getElementById('qe-options').style.display = 'none';
+    document.getElementById('qe-explanation').style.display = 'none';
+    document.getElementById('qe-actions').style.display = 'none';
+    document.querySelector('.qe-progress-bar').style.width = '100%';
+
+    // calc points earned
+    const earnedPts = Math.round(cat.poin * (score / total));
+
+    let emoji = '😅';
+    let title = 'Coba Lagi!';
+    if (pct >= 80) { emoji = '🎉'; title = 'Luar Biasa!'; }
+    else if (pct >= 60) { emoji = '👍'; title = 'Bagus!'; }
+    else if (pct >= 40) { emoji = '💪'; title = 'Terus Semangat!'; }
+
+    document.getElementById('result-emoji').textContent = emoji;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-score').textContent = `${score}/${total}`;
+    document.getElementById('result-sub').textContent = `Kamu menjawab ${score} dari ${total} soal dengan benar (${pct}%)`;
+    document.getElementById('result-pts-badge').textContent = `+${earnedPts} Poin Ditambahkan!`;
+
+    // Save points
+    setPoints(getPoints() + earnedPts);
+
+    // Mark as completed if passed (>=60%)
+    if (pct >= 60) {
+      const done = getCompletedQuizzes();
+      if (!done.includes(currentCat)) {
+        done.push(currentCat);
+        setCompletedQuizzes(done);
+      }
+    }
+
+    // Progress fill
+    document.getElementById('qe-prog').style.width = '100%';
+
+    document.getElementById('qe-result').classList.add('show');
+    updateSidebar();
+  }
+
+  function retryQuiz() {
+    startQuiz(currentCat);
+  }
+
+  function quitQuiz() {
+    currentCat = null;
+    document.getElementById('cat-section').style.display = '';
+    document.getElementById('quiz-engine-panel').classList.remove('active');
+    renderCategories();
+    updateSidebar();
+  }
+
+  // ── Init ──
+  renderCategories();
+  updateSidebar();
+  </script>
+</body>
+</html>

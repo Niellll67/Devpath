@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Roadmap – DevPath</title>
+  <meta name="description" content="Jalur belajar coding: HTML → CSS → JavaScript. Ikuti langkah demi langkah dan tandai topik yang sudah selesai."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <span class="logo-fire">🔥</span>
+      <span class="logo-text">Dev<span class="logo-accent">Path</span></span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="sidelink" id="nav-home">
+        <span class="sidelink-icon">🏠</span><span>Dashboard</span>
+      </a>
+      <a href="roadmap.html" class="sidelink active" id="nav-roadmap">
+        <span class="sidelink-icon">🗺️</span><span>The Roadmap</span>
+      </a>
+      <a href="quiz.html" class="sidelink" id="nav-quiz">
+        <span class="sidelink-icon">🎯</span><span>Quiz Center</span>
+      </a>
+      <a href="daily.html" class="sidelink" id="nav-daily">
+        <span class="sidelink-icon">⚡</span><span>Daily Challenge</span>
+      </a>
+    </nav>
+    <div class="sidebar-stats">
+      <h4 class="stats-title">Statistik Kamu</h4>
+      <div class="stat-item">
+        <span class="stat-icon streak-icon">🔥</span>
+        <div><div class="stat-val" id="sidebar-streak">0</div><div class="stat-lbl">Hari Streak</div></div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">⭐</span>
+        <div><div class="stat-val" id="sidebar-points">0</div><div class="stat-lbl">Total Poin</div></div>
+      </div>
+      <div class="stat-item">
+        <span class="stat-icon">🏆</span>
+        <div><div class="stat-val" id="sidebar-level">Level 1</div><div class="stat-lbl" id="sidebar-level-lbl">Newbie</div></div>
+      </div>
+    </div>
+    <button class="hamburger-close" id="sidebar-close">✕</button>
+  </aside>
+  <div class="overlay" id="overlay"></div>
+
+  <main class="main-content" id="main">
+    <header class="topbar">
+      <button class="hamburger" id="hamburger">☰</button>
+      <div class="topbar-title">
+        <h1>The Roadmap</h1>
+        <span>Jalur belajarmu dari nol hingga jago</span>
+      </div>
+      <div class="topbar-streak">
+        <span class="fire-badge" id="topbar-streak-badge">🔥 0 Hari</span>
+      </div>
+    </header>
+
+    <section class="roadmap-section" id="roadmap-section">
+      <div class="roadmap-intro">
+        <p>Ikuti jalur di bawah ini secara berurutan. Arahkan kursor ke ikon materi untuk melihat ringkasannya. ✅ = sudah selesai</p>
+      </div>
+
+      <!-- VERTICAL PROGRESS LINE -->
+      <div class="roadmap-line" id="roadmap-line">
+
+        <!-- STAGE 1: HTML -->
+        <div class="road-stage" id="stage-html">
+          <div class="stage-connector top-none"></div>
+          <div class="road-island done" id="island-html">
+            <div class="island-badge done-badge">✅ Selesai</div>
+            <div class="island-icon">🌐</div>
+            <h3>HTML</h3>
+            <p>HyperText Markup Language</p>
+            <div class="island-tooltip">
+              <strong>Yang akan kamu pelajari:</strong><br/>
+              Tag dasar, struktur halaman, heading, paragraf, gambar, tabel, form, dan elemen semantik.
+            </div>
+          </div>
+          <div class="stage-connector"></div>
+          <div class="road-topics">
+            <div class="topic-pill done-pill">✓ Struktur Dasar</div>
+            <div class="topic-pill done-pill">✓ Tag & Atribut</div>
+            <div class="topic-pill done-pill">✓ Tabel & Form</div>
+            <div class="topic-pill done-pill">✓ Elemen Semantik</div>
+          </div>
+        </div>
+
+        <!-- STAGE 2: CSS -->
+        <div class="road-stage" id="stage-css">
+          <div class="stage-connector"></div>
+          <div class="road-island in-progress" id="island-css">
+            <div class="island-badge progress-badge">⏳ Sedang Belajar</div>
+            <div class="island-icon">🎨</div>
+            <h3>CSS</h3>
+            <p>Cascading Style Sheets</p>
+            <div class="island-tooltip">
+              <strong>Yang akan kamu pelajari:</strong><br/>
+              Selektor, Box Model, Flexbox, Grid, animasi, transisi, dan desain responsif.
+            </div>
+          </div>
+          <div class="stage-connector dashed"></div>
+          <div class="road-topics">
+            <div class="topic-pill done-pill">✓ Selektor & Properti</div>
+            <div class="topic-pill done-pill">✓ Box Model</div>
+            <div class="topic-pill active-pill">⏳ Flexbox & Grid</div>
+            <div class="topic-pill locked-pill">🔒 Animasi</div>
+          </div>
+        </div>
+
+        <!-- STAGE 3: JAVASCRIPT -->
+        <div class="road-stage" id="stage-js">
+          <div class="stage-connector dashed"></div>
+          <div class="road-island locked" id="island-js">
+            <div class="island-badge locked-badge">🔒 Terkunci</div>
+            <div class="island-icon dim">⚙️</div>
+            <h3>JavaScript</h3>
+            <p>Bahasa Pemrograman Web</p>
+            <div class="island-tooltip">
+              <strong>Selesaikan CSS dulu!</strong><br/>
+              Setelah CSS tuntas, kamu akan belajar: variabel, fungsi, DOM manipulation, event listener, dan LocalStorage.
+            </div>
+          </div>
+          <div class="stage-connector dashed"></div>
+          <div class="road-topics">
+            <div class="topic-pill locked-pill">🔒 Variabel & Fungsi</div>
+            <div class="topic-pill locked-pill">🔒 DOM Manipulation</div>
+            <div class="topic-pill locked-pill">🔒 Event Listener</div>
+            <div class="topic-pill locked-pill">🔒 LocalStorage</div>
+          </div>
+        </div>
+
+        <!-- FINISH -->
+        <div class="road-finish" id="road-finish">
+          <div class="stage-connector dashed"></div>
+          <div class="finish-flag">🏁</div>
+          <h3>Junior Web Developer!</h3>
+          <p>Kamu siap membuat website sendiri dari nol.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <footer class="main-footer" id="footer">
+      <p>© 2026 DevPath · Dibuat dengan ❤️ oleh siswa kelas 10 · Jalur belajar untuk semua</p>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
