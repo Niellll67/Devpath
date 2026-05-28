@@ -7,7 +7,7 @@
   <meta name="description" content="Jalur belajar coding: HTML → CSS → JavaScript. Ikuti langkah demi langkah dan tandai topik yang sudah selesai."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
@@ -64,11 +64,24 @@
     </header>
 
     <section class="roadmap-section" id="roadmap-section">
-      <div class="roadmap-intro">
-        <p>Ikuti jalur di bawah ini secara berurutan. Arahkan kursor ke ikon materi untuk melihat ringkasannya. ✅ = sudah selesai</p>
+
+      <!-- Header Card -->
+      <div class="roadmap-header-card">
+        <div class="rh-icon">🗺️</div>
+        <div>
+          <div class="rh-title">Jalur Belajar Web Development</div>
+          <div class="rh-desc">Kuasai HTML, CSS, dan JavaScript secara berurutan. Arahkan kursor ke setiap tahap untuk melihat detail materi yang akan dipelajari. Selesaikan kuis di setiap tahap untuk membuka stage berikutnya.</div>
+        </div>
       </div>
 
-      <!-- VERTICAL PROGRESS LINE -->
+      <!-- Progress bar -->
+      <div class="roadmap-progress-bar-wrap">
+        <span class="rpb-label">📊 Progress Keseluruhan</span>
+        <div class="rpb-bar-wrap"><div class="rpb-bar-fill" id="rpb-fill" style="width:0%"></div></div>
+        <span class="rpb-pct" id="rpb-pct">0%</span>
+      </div>
+
+      <!-- VERTICAL TIMELINE -->
       <div class="roadmap-line" id="roadmap-line">
 
         <!-- STAGE 1: HTML -->
@@ -76,19 +89,19 @@
           <div class="stage-connector top-none"></div>
           <div class="road-island done" id="island-html">
             <div class="island-badge done-badge">✅ Selesai</div>
-            <div class="island-icon">🌐</div>
+            <span class="island-icon">🌐</span>
             <h3>HTML</h3>
             <p>HyperText Markup Language</p>
             <div class="island-tooltip">
               <strong>Yang akan kamu pelajari:</strong><br/>
-              Tag dasar, struktur halaman, heading, paragraf, gambar, tabel, form, dan elemen semantik.
+              Tag dasar, struktur halaman, heading, paragraf, gambar, tabel, form, dan elemen semantik HTML5.
             </div>
           </div>
           <div class="stage-connector"></div>
           <div class="road-topics">
             <div class="topic-pill done-pill">✓ Struktur Dasar</div>
-            <div class="topic-pill done-pill">✓ Tag & Atribut</div>
-            <div class="topic-pill done-pill">✓ Tabel & Form</div>
+            <div class="topic-pill done-pill">✓ Tag &amp; Atribut</div>
+            <div class="topic-pill done-pill">✓ Tabel &amp; Form</div>
             <div class="topic-pill done-pill">✓ Elemen Semantik</div>
           </div>
         </div>
@@ -98,20 +111,20 @@
           <div class="stage-connector"></div>
           <div class="road-island in-progress" id="island-css">
             <div class="island-badge progress-badge">⏳ Sedang Belajar</div>
-            <div class="island-icon">🎨</div>
+            <span class="island-icon">🎨</span>
             <h3>CSS</h3>
             <p>Cascading Style Sheets</p>
             <div class="island-tooltip">
               <strong>Yang akan kamu pelajari:</strong><br/>
-              Selektor, Box Model, Flexbox, Grid, animasi, transisi, dan desain responsif.
+              Selektor, Box Model, Flexbox, Grid, animasi CSS, transisi, dan desain responsif untuk semua device.
             </div>
           </div>
           <div class="stage-connector dashed"></div>
           <div class="road-topics">
-            <div class="topic-pill done-pill">✓ Selektor & Properti</div>
+            <div class="topic-pill done-pill">✓ Selektor &amp; Properti</div>
             <div class="topic-pill done-pill">✓ Box Model</div>
-            <div class="topic-pill active-pill">⏳ Flexbox & Grid</div>
-            <div class="topic-pill locked-pill">🔒 Animasi</div>
+            <div class="topic-pill active-pill">⏳ Flexbox &amp; Grid</div>
+            <div class="topic-pill locked-pill">🔒 Animasi &amp; Transisi</div>
           </div>
         </div>
 
@@ -120,20 +133,20 @@
           <div class="stage-connector dashed"></div>
           <div class="road-island locked" id="island-js">
             <div class="island-badge locked-badge">🔒 Terkunci</div>
-            <div class="island-icon dim">⚙️</div>
+            <span class="island-icon dim">⚙️</span>
             <h3>JavaScript</h3>
             <p>Bahasa Pemrograman Web</p>
             <div class="island-tooltip">
               <strong>Selesaikan CSS dulu!</strong><br/>
-              Setelah CSS tuntas, kamu akan belajar: variabel, fungsi, DOM manipulation, event listener, dan LocalStorage.
+              Setelah CSS tuntas, kamu akan belajar: variabel, fungsi, DOM manipulation, event listener, fetch API, dan LocalStorage.
             </div>
           </div>
           <div class="stage-connector dashed"></div>
           <div class="road-topics">
-            <div class="topic-pill locked-pill">🔒 Variabel & Fungsi</div>
+            <div class="topic-pill locked-pill">🔒 Variabel &amp; Fungsi</div>
             <div class="topic-pill locked-pill">🔒 DOM Manipulation</div>
             <div class="topic-pill locked-pill">🔒 Event Listener</div>
-            <div class="topic-pill locked-pill">🔒 LocalStorage</div>
+            <div class="topic-pill locked-pill">🔒 LocalStorage &amp; API</div>
           </div>
         </div>
 
@@ -142,7 +155,7 @@
           <div class="stage-connector dashed"></div>
           <div class="finish-flag">🏁</div>
           <h3>Junior Web Developer!</h3>
-          <p>Kamu siap membuat website sendiri dari nol.</p>
+          <p>Kamu siap membuat website sendiri dari nol. 🎉</p>
         </div>
 
       </div>
@@ -154,5 +167,155 @@
   </main>
 
   <script src="script.js"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Calculate overall progress
+    const cq = JSON.parse(localStorage.getItem('devpath_completed_quizzes') || '[]');
+    const total = 3;
+    const done  = ['html','css','javascript'].filter(c => cq.includes(c)).length;
+    const pct   = Math.round((done / total) * 100);
+    const fill  = document.getElementById('rpb-fill');
+    const pctEl = document.getElementById('rpb-pct');
+    setTimeout(() => {
+      if (fill)  fill.style.width = pct + '%';
+      if (pctEl) pctEl.textContent = pct + '%';
+    }, 300);
+
+    // Dynamic stage rendering based on user progress
+    const isHtmlDone = cq.includes('html');
+    const htmlIsland = document.getElementById('island-html');
+    const htmlBadge = htmlIsland.querySelector('.island-badge');
+    const htmlTopics = document.querySelector('#stage-html .road-topics');
+
+    if (isHtmlDone) {
+      htmlIsland.className = 'road-island done';
+      htmlBadge.className = 'island-badge done-badge';
+      htmlBadge.textContent = '✅ Selesai';
+      htmlTopics.innerHTML = `
+        <div class="topic-pill done-pill">✓ Struktur Dasar</div>
+        <div class="topic-pill done-pill">✓ Tag &amp; Atribut</div>
+        <div class="topic-pill done-pill">✓ Tabel &amp; Form</div>
+        <div class="topic-pill done-pill">✓ Elemen Semantik</div>
+      `;
+    } else {
+      htmlIsland.className = 'road-island in-progress';
+      htmlBadge.className = 'island-badge progress-badge';
+      htmlBadge.textContent = '⏳ Sedang Belajar';
+      htmlTopics.innerHTML = `
+        <div class="topic-pill active-pill">⏳ Struktur Dasar</div>
+        <div class="topic-pill active-pill">⏳ Tag &amp; Atribut</div>
+        <div class="topic-pill locked-pill">🔒 Tabel &amp; Form</div>
+        <div class="topic-pill locked-pill">🔒 Elemen Semantik</div>
+      `;
+    }
+
+    const isCssDone = cq.includes('css');
+    const cssIsland = document.getElementById('island-css');
+    const cssBadge = cssIsland.querySelector('.island-badge');
+    const cssIcon = cssIsland.querySelector('.island-icon');
+    const cssTopics = document.querySelector('#stage-css .road-topics');
+
+    if (isCssDone) {
+      cssIsland.className = 'road-island done';
+      cssBadge.className = 'island-badge done-badge';
+      cssBadge.textContent = '✅ Selesai';
+      cssIcon.classList.remove('dim');
+      cssTopics.innerHTML = `
+        <div class="topic-pill done-pill">✓ Selektor &amp; Properti</div>
+        <div class="topic-pill done-pill">✓ Box Model</div>
+        <div class="topic-pill done-pill">✓ Flexbox &amp; Grid</div>
+        <div class="topic-pill done-pill">✓ Animasi &amp; Transisi</div>
+      `;
+    } else if (isHtmlDone) {
+      cssIsland.className = 'road-island in-progress';
+      cssBadge.className = 'island-badge progress-badge';
+      cssBadge.textContent = '⏳ Sedang Belajar';
+      cssIcon.classList.remove('dim');
+      cssTopics.innerHTML = `
+        <div class="topic-pill done-pill">✓ Selektor &amp; Properti</div>
+        <div class="topic-pill done-pill">✓ Box Model</div>
+        <div class="topic-pill active-pill">⏳ Flexbox &amp; Grid</div>
+        <div class="topic-pill locked-pill">🔒 Animasi &amp; Transisi</div>
+      `;
+    } else {
+      cssIsland.className = 'road-island locked';
+      cssBadge.className = 'island-badge locked-badge';
+      cssBadge.textContent = '🔒 Terkunci';
+      cssIcon.classList.add('dim');
+      cssTopics.innerHTML = `
+        <div class="topic-pill locked-pill">🔒 Selektor &amp; Properti</div>
+        <div class="topic-pill locked-pill">🔒 Box Model</div>
+        <div class="topic-pill locked-pill">🔒 Flexbox &amp; Grid</div>
+        <div class="topic-pill locked-pill">🔒 Animasi &amp; Transisi</div>
+      `;
+    }
+
+    const isJsDone = cq.includes('javascript');
+    const jsIsland = document.getElementById('island-js');
+    const jsBadge = jsIsland.querySelector('.island-badge');
+    const jsIcon = jsIsland.querySelector('.island-icon');
+    const jsTopics = document.querySelector('#stage-js .road-topics');
+    const jsTooltip = jsIsland.querySelector('.island-tooltip');
+
+    if (isJsDone) {
+      jsIsland.className = 'road-island done';
+      jsBadge.className = 'island-badge done-badge';
+      jsBadge.textContent = '✅ Selesai';
+      jsIcon.classList.remove('dim');
+      jsTopics.innerHTML = `
+        <div class="topic-pill done-pill">✓ Variabel &amp; Fungsi</div>
+        <div class="topic-pill done-pill">✓ DOM Manipulation</div>
+        <div class="topic-pill done-pill">✓ Event Listener</div>
+        <div class="topic-pill done-pill">✓ LocalStorage &amp; API</div>
+      `;
+      jsTooltip.innerHTML = `<strong>Luar Biasa!</strong><br/>Kamu telah menyelesaikan seluruh materi JavaScript.`;
+    } else if (isCssDone) {
+      jsIsland.className = 'road-island in-progress';
+      jsBadge.className = 'island-badge progress-badge';
+      jsBadge.textContent = '⏳ Sedang Belajar';
+      jsIcon.classList.remove('dim');
+      jsTopics.innerHTML = `
+        <div class="topic-pill active-pill">⏳ Variabel &amp; Fungsi</div>
+        <div class="topic-pill active-pill">⏳ DOM Manipulation</div>
+        <div class="topic-pill locked-pill">🔒 Event Listener</div>
+        <div class="topic-pill locked-pill">🔒 LocalStorage &amp; API</div>
+      `;
+      jsTooltip.innerHTML = `<strong>Yang akan kamu pelajari:</strong><br/>Variabel, fungsi, DOM manipulation, event listener, fetch API, dan LocalStorage.`;
+    } else {
+      jsIsland.className = 'road-island locked';
+      jsBadge.className = 'island-badge locked-badge';
+      jsBadge.textContent = '🔒 Terkunci';
+      jsIcon.classList.add('dim');
+      jsTopics.innerHTML = `
+        <div class="topic-pill locked-pill">🔒 Variabel &amp; Fungsi</div>
+        <div class="topic-pill locked-pill">🔒 DOM Manipulation</div>
+        <div class="topic-pill locked-pill">🔒 Event Listener</div>
+        <div class="topic-pill locked-pill">🔒 LocalStorage &amp; API</div>
+      `;
+      jsTooltip.innerHTML = `<strong>Selesaikan CSS dulu!</strong><br/>Setelah CSS tuntas, materi JavaScript akan terbuka secara otomatis.`;
+    }
+
+    const conn1 = document.querySelector('#stage-css .stage-connector');
+    const conn2 = document.querySelector('#stage-js .stage-connector');
+    const conn3 = document.querySelector('#road-finish .stage-connector');
+    const finishRoad = document.getElementById('road-finish');
+
+    if (conn1) {
+      if (isHtmlDone) conn1.classList.remove('dashed');
+      else conn1.classList.add('dashed');
+    }
+    if (conn2) {
+      if (isCssDone) conn2.classList.remove('dashed');
+      else conn2.classList.add('dashed');
+    }
+    if (conn3) {
+      if (isJsDone) conn3.classList.remove('dashed');
+      else conn3.classList.add('dashed');
+    }
+    if (finishRoad && isJsDone) {
+      finishRoad.classList.add('done');
+    }
+  });
+  </script>
 </body>
 </html>
