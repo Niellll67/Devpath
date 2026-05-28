@@ -26,28 +26,41 @@ function dpGetInt(key, fallback = 0) {
 }
 
 // ── Daily Streak Engine ──
-function computeStreak() {
+function checkStreakStatus() {
   const today = new Date().toDateString();
-  const lastVisit = dpGet('lastVisit');
-  let streak = dpGetInt('streak', 0);
-
-  if (lastVisit === today) {
-    return streak; // already computed today
-  }
-
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
+  const lastDone = dpGet('daily_done');
+  let streak = dpGetInt('streak', 0);
 
-  if (lastVisit === yesterday.toDateString()) {
-    streak += 1; // consecutive day
-  } else if (lastVisit === '') {
-    streak = 1;  // very first visit ever
+  if (lastDone === today || lastDone === yesterday.toDateString()) {
+    return streak;
   } else {
-    streak = 1;  // broke streak → reset to 1 (today counts)
+    dpSet('streak', 0);
+    return 0;
+  }
+}
+
+function completeDailyChallenge() {
+  const today = new Date().toDateString();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const lastDone = dpGet('daily_done');
+  let streak = dpGetInt('streak', 0);
+
+  if (lastDone === today) {
+    return streak;
+  }
+
+  if (lastDone === yesterday.toDateString()) {
+    streak += 1;
+  } else {
+    streak = 1;
   }
 
   dpSet('streak', streak);
-  dpSet('lastVisit', today);
+  dpSet('daily_done', today);
+  updateSharedStats();
   return streak;
 }
 
@@ -63,7 +76,7 @@ function getLevel(pts) {
 
 // ── Update All Shared UI Elements ──
 function updateSharedStats() {
-  const streak = computeStreak();
+  const streak = checkStreakStatus();
   const pts    = dpGetInt('points', 0);
   const { lv, name } = getLevel(pts);
 
