@@ -3,804 +3,372 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Daily Challenge – DevPath</title>
-  <meta name="description" content="Tantangan coding harian DevPath. Selesaikan quiz harian yang dibuat oleh AI setiap hari untuk menjaga streak dan meningkatkan skill-mu."/>
+  <title>DevPath – Jalur Belajar Coding Kamu</title>
+  <meta name="description" content="DevPath adalah platform belajar coding interaktif untuk siswa kelas 10. Ikuti roadmap, kerjakan kuis, dan jaga Daily Streak-mu!"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
-  <style>
-    /* ── DAILY QUIZ AI STYLES ── */
-    .daily-wrap { padding: 32px; display: flex; flex-direction: column; gap: 28px; flex: 1; }
-
-    /* Streak Hero */
-    .streak-hero {
-      background: linear-gradient(135deg, #1e2f42 0%, #0F1923 100%);
-      border: 1px solid var(--border); border-radius: 20px;
-      padding: 28px 32px; display: flex; align-items: center; gap: 32px;
-      position: relative; overflow: hidden;
-    }
-    .streak-hero::before {
-      content: '🔥';
-      position: absolute; right: -10px; top: -20px;
-      font-size: 8rem; opacity: .06; pointer-events: none;
-    }
-    .streak-fire-big { font-size: 4rem; animation: pulse-fire 1.5s ease-in-out infinite; flex-shrink: 0; }
-    .streak-hero-info { flex: 1; }
-    .streak-hero-number { font-size: 3.5rem; font-weight: 900; color: var(--orange); line-height: 1; }
-    .streak-hero-label { font-size: 1rem; color: var(--text-muted); margin-bottom: 16px; }
-    .streak-week-row { display: flex; gap: 8px; flex-wrap: wrap; }
-    .sdot-lg {
-      width: 38px; height: 38px; border-radius: 50%;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      font-size: 0.65rem; font-weight: 800; gap: 1px;
-      border: 2px solid var(--border); background: var(--surface2); color: var(--text-muted);
-      transition: all .3s;
-    }
-    .sdot-lg .dot-day { font-size: 0.6rem; font-weight: 600; opacity: .7; }
-    .sdot-lg.done { background: rgba(244,162,97,.25); color: var(--orange); border-color: var(--orange); }
-    .sdot-lg.today-done { background: var(--orange); color: #1a1000; border-color: var(--orange); }
-    .sdot-lg.today-pending { background: rgba(244,162,97,.1); color: var(--orange); border-color: var(--orange); animation: pulse-border 2s infinite; }
-    @keyframes pulse-border { 0%,100%{box-shadow:0 0 0 0 rgba(244,162,97,.4)} 50%{box-shadow:0 0 0 6px rgba(244,162,97,0)} }
-
-    /* AI Quiz Card */
-    .ai-quiz-card {
-      background: var(--surface); border-radius: 20px; padding: 32px;
-      border: 1px solid var(--border); box-shadow: var(--shadow);
-    }
-    .ai-quiz-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
-    .ai-quiz-title-wrap h2 { font-size: 1.35rem; font-weight: 800; margin-bottom: 6px; }
-    .ai-badge-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-    .badge-ai {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: linear-gradient(135deg,rgba(138,43,226,.25),rgba(66,153,225,.2));
-      color: #c084fc; border: 1px solid rgba(138,43,226,.4);
-      padding: 4px 12px; border-radius: 50px; font-size: 0.78rem; font-weight: 700;
-    }
-    .badge-date { background: rgba(42,157,143,.15); color: var(--teal); padding: 4px 12px; border-radius: 50px; font-size: 0.78rem; font-weight: 700; }
-
-    /* API Key Input */
-    .api-key-section {
-      background: rgba(138,43,226,.08); border: 1px solid rgba(138,43,226,.3);
-      border-radius: 14px; padding: 20px; margin-bottom: 20px;
-    }
-    .api-key-section h4 { font-size: 0.95rem; font-weight: 700; margin-bottom: 8px; color: #c084fc; }
-    .api-key-section p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 14px; }
-    .api-input-row { display: flex; gap: 10px; }
-    .api-key-input {
-      flex: 1; background: var(--surface2); border: 1.5px solid var(--border);
-      border-radius: 10px; padding: 11px 16px; color: var(--text);
-      font-family: 'Inter', sans-serif; font-size: 0.9rem;
-      transition: border-color .2s;
-    }
-    .api-key-input:focus { outline: none; border-color: #c084fc; }
-    .btn-save-api {
-      background: linear-gradient(135deg,#7c3aed,#4c1d95); color: white;
-      border: none; border-radius: 10px; padding: 11px 20px; cursor: pointer;
-      font-family: 'Inter', sans-serif; font-weight: 700; font-size: 0.9rem;
-      transition: opacity .2s, transform .2s;
-    }
-    .btn-save-api:hover { opacity: .9; transform: translateY(-1px); }
-
-    /* Loading State */
-    .ai-loading {
-      display: flex; flex-direction: column; align-items: center; gap: 16px;
-      padding: 40px; text-align: center;
-    }
-    .ai-spinner {
-      width: 48px; height: 48px; border-radius: 50%;
-      border: 4px solid var(--surface2);
-      border-top-color: #c084fc; border-right-color: var(--teal);
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .ai-loading p { color: var(--text-muted); font-size: 0.95rem; }
-
-    /* Error State */
-    .ai-error {
-      display: none; padding: 20px; border-radius: 12px;
-      background: rgba(230,57,70,.1); border: 1px solid var(--red);
-      color: var(--red); font-size: 0.92rem; line-height: 1.6;
-    }
-    .ai-error.show { display: block; }
-
-    /* Quiz Questions */
-    .ai-quiz-body { display: none; }
-    .ai-quiz-body.show { display: block; }
-
-    .dq-question-card {
-      background: var(--surface2); border-radius: 14px; padding: 22px;
-      border: 1px solid var(--border); margin-bottom: 16px;
-    }
-    .dq-q-num { color: var(--teal); font-weight: 800; font-size: 0.85rem; margin-bottom: 8px; }
-    .dq-q-text { font-weight: 600; font-size: 1.02rem; margin-bottom: 16px; line-height: 1.6; }
-    .dq-opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .dq-opt {
-      padding: 12px 16px; background: var(--surface); border: 2px solid var(--border);
-      border-radius: 10px; cursor: pointer; font-size: 0.9rem; font-weight: 500;
-      text-align: left; display: flex; align-items: center; gap: 10px;
-      transition: border-color .2s, background .2s, transform .15s;
-      font-family: 'Inter', sans-serif; color: var(--text); width: 100%;
-    }
-    .dq-opt:hover:not(:disabled) { border-color: var(--teal); background: rgba(42,157,143,.1); transform: translateX(2px); }
-    .dq-opt .opt-letter {
-      width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
-    }
-    .dq-opt.correct { border-color: var(--green) !important; background: rgba(87,204,153,.18) !important; color: var(--green); }
-    .dq-opt.correct .opt-letter { background: var(--green); border-color: var(--green); color: #003320; }
-    .dq-opt.wrong { border-color: var(--red) !important; background: rgba(230,57,70,.12) !important; color: var(--red); }
-    .dq-opt.wrong .opt-letter { background: var(--red); border-color: var(--red); color: white; }
-    .dq-opt:disabled { cursor: default; }
-    .dq-explanation {
-      display: none; margin-top: 12px; padding: 12px 16px; border-radius: 10px;
-      font-size: 0.87rem; line-height: 1.6;
-    }
-    .dq-explanation.show.ok { display: block; background: rgba(87,204,153,.12); border: 1px solid var(--green); color: var(--green); }
-    .dq-explanation.show.err { display: block; background: rgba(230,57,70,.1); border: 1px solid var(--red); color: var(--red); }
-
-    .dq-submit-row { display: flex; justify-content: center; margin-top: 8px; }
-    .btn-dq-submit {
-      background: linear-gradient(135deg,var(--teal),#7defe6); color: #003320;
-      font-weight: 800; padding: 14px 36px; border-radius: 50px; border: none;
-      cursor: pointer; font-family: 'Inter', sans-serif; font-size: 1rem;
-      box-shadow: 0 4px 20px rgba(42,157,143,.4); transition: opacity .2s, transform .2s;
-    }
-    .btn-dq-submit:hover:not(:disabled) { opacity: .9; transform: translateY(-2px); }
-    .btn-dq-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; }
-
-    /* Daily Result */
-    .dq-result-card {
-      display: none; background: linear-gradient(135deg,rgba(42,157,143,.18),rgba(87,204,153,.08));
-      border: 1px solid var(--teal); border-radius: 18px; padding: 32px;
-      text-align: center; flex-direction: column; gap: 14px; align-items: center;
-    }
-    .dq-result-card.show { display: flex; }
-    .dq-result-emoji { font-size: 3.5rem; animation: pop-in .5s cubic-bezier(.36,.07,.19,.97); }
-    @keyframes pop-in { 0%{transform:scale(0) rotate(-10deg)} 70%{transform:scale(1.15) rotate(3deg)} 100%{transform:scale(1)} }
-    .dq-result-score { font-size: 2.8rem; font-weight: 900; color: var(--teal); }
-    .dq-result-label { color: var(--text-muted); font-size: 0.95rem; }
-    .dq-pts-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
-    .dq-pts-chip {
-      padding: 10px 22px; border-radius: 50px; font-weight: 800; font-size: 0.95rem;
-    }
-    .chip-orange { background: rgba(244,162,97,.2); color: var(--orange); border: 1px solid rgba(244,162,97,.4); }
-    .chip-fire { background: rgba(230,57,70,.15); color: #ff6b6b; border: 1px solid rgba(230,57,70,.3); }
-
-    /* Already Done Banner */
-    .dq-done-banner {
-      display: none; background: rgba(87,204,153,.12); border: 1px solid var(--green);
-      border-radius: 14px; padding: 20px 24px; color: var(--green);
-      font-weight: 700; font-size: 1rem; align-items: center; gap: 12px;
-    }
-    .dq-done-banner.show { display: flex; }
-
-    /* Regen button */
-    .btn-regen {
-      background: none; border: 1px solid rgba(138,43,226,.5); color: #c084fc;
-      padding: 8px 18px; border-radius: 50px; cursor: pointer;
-      font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 600;
-      transition: background .2s, transform .2s;
-    }
-    .btn-regen:hover { background: rgba(138,43,226,.15); transform: translateY(-1px); }
-
-    /* Archive */
-    .streak-archive-section { }
-    .streak-archive-section h2 { font-size: 1.2rem; font-weight: 800; margin-bottom: 20px; }
-    .archive-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
-    .archive-card {
-      background: var(--surface); border-radius: 14px; padding: 18px;
-      border: 1px solid var(--border); transition: transform .3s;
-    }
-    .archive-card:hover { transform: translateY(-3px); }
-    .done-card { border-left: 4px solid var(--green); }
-    .arch-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-    .arch-pts { font-size: 0.8rem; font-weight: 700; color: var(--teal); }
-    .archive-card h4 { font-size: 0.97rem; font-weight: 700; margin-bottom: 6px; }
-    .archive-card p { font-size: 0.85rem; color: var(--text-muted); }
-
-    @media (max-width: 900px) {
-      .daily-wrap { padding: 20px; }
-      .streak-hero { flex-direction: column; gap: 16px; padding: 22px; }
-      .dq-opts { grid-template-columns: 1fr; }
-      .archive-grid { grid-template-columns: 1fr 1fr; }
-      .api-input-row { flex-direction: column; }
-    }
-    @media (max-width: 540px) {
-      .archive-grid { grid-template-columns: 1fr; }
-      .streak-hero-number { font-size: 2.5rem; }
-    }
-  </style>
 </head>
 <body>
 
+  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <span class="logo-fire">🔥</span>
       <span class="logo-text">Dev<span class="logo-accent">Path</span></span>
     </div>
     <nav class="sidebar-nav">
-      <a href="index.html" class="sidelink" id="nav-home"><span class="sidelink-icon">🏠</span><span>Dashboard</span></a>
-      <a href="roadmap.html" class="sidelink" id="nav-roadmap"><span class="sidelink-icon">🗺️</span><span>The Roadmap</span></a>
-      <a href="quiz.html" class="sidelink" id="nav-quiz"><span class="sidelink-icon">🎯</span><span>Quiz Center</span></a>
-      <a href="daily.html" class="sidelink active" id="nav-daily"><span class="sidelink-icon">⚡</span><span>Daily Challenge</span></a>
+      <a href="index.html" class="sidelink active" id="nav-home">
+        <span class="sidelink-icon">🏠</span><span>Dashboard</span>
+      </a>
+      <a href="roadmap.html" class="sidelink" id="nav-roadmap">
+        <span class="sidelink-icon">🗺️</span><span>The Roadmap</span>
+      </a>
+      <a href="quiz.html" class="sidelink" id="nav-quiz">
+        <span class="sidelink-icon">🎯</span><span>Quiz Center</span>
+      </a>
+      <a href="daily.html" class="sidelink" id="nav-daily">
+        <span class="sidelink-icon">⚡</span><span>Daily Challenge</span>
+      </a>
     </nav>
     <div class="sidebar-stats">
       <h4 class="stats-title">Statistik Kamu</h4>
-      <div class="stat-item"><span class="stat-icon streak-icon">🔥</span><div><div class="stat-val" id="sidebar-streak">0</div><div class="stat-lbl">Hari Streak</div></div></div>
-      <div class="stat-item"><span class="stat-icon">⭐</span><div><div class="stat-val" id="sidebar-points">0</div><div class="stat-lbl">Total Poin</div></div></div>
-      <div class="stat-item"><span class="stat-icon">🏆</span><div><div class="stat-val" id="sidebar-level">Level 1</div><div class="stat-lbl" id="sidebar-level-lbl">Newbie</div></div></div>
+      <div class="stat-item" id="stat-streak">
+        <span class="stat-icon streak-icon">🔥</span>
+        <div>
+          <div class="stat-val" id="sidebar-streak">0</div>
+          <div class="stat-lbl">Hari Streak</div>
+        </div>
+      </div>
+      <div class="stat-item" id="stat-poin">
+        <span class="stat-icon">⭐</span>
+        <div>
+          <div class="stat-val" id="sidebar-points">0</div>
+          <div class="stat-lbl">Total Poin</div>
+        </div>
+      </div>
+      <div class="stat-item" id="stat-level">
+        <span class="stat-icon">🏆</span>
+        <div>
+          <div class="stat-val" id="sidebar-level">Level 1</div>
+          <div class="stat-lbl" id="sidebar-level-lbl">Newbie</div>
+        </div>
+      </div>
     </div>
     <button class="hamburger-close" id="sidebar-close" aria-label="Tutup sidebar">✕</button>
   </aside>
+
+  <!-- OVERLAY -->
   <div class="overlay" id="overlay"></div>
 
+  <!-- MAIN CONTENT -->
   <main class="main-content" id="main">
+
+    <!-- TOP BAR -->
     <header class="topbar">
       <button class="hamburger" id="hamburger" aria-label="Buka menu">☰</button>
       <div class="topbar-title">
-        <h1>Daily Challenge</h1>
-        <span>Satu quiz AI setiap hari – jaga streakmu! 🔥</span>
+        <h1>Dashboard</h1>
+        <span id="topbar-greeting">Selamat datang kembali! 👋</span>
       </div>
-      <div class="topbar-streak"><span class="fire-badge" id="topbar-streak-badge">🔥 0 Hari</span></div>
+      <div class="topbar-streak">
+        <span class="fire-badge" id="topbar-streak-badge">🔥 0 Hari</span>
+      </div>
     </header>
 
-    <div class="daily-wrap">
-
-      <!-- STREAK HERO -->
-      <div class="streak-hero" id="streak-hero">
-        <div class="streak-fire-big">🔥</div>
-        <div class="streak-hero-info">
-          <div class="streak-hero-number" id="streak-hero-num">0</div>
-          <div class="streak-hero-label">Hari Streak Berturut-turut</div>
-          <div class="streak-week-row" id="streak-week-row">
-            <!-- Rendered by JS -->
-          </div>
+    <!-- HERO GREETING -->
+    <section class="dash-hero" id="dash-hero">
+      <!-- Floating particles (injected by JS) -->
+      <div class="dash-hero-text">
+        <div class="greeting-badge">🚀 Jalur Belajar Interaktif untuk Kelas 10</div>
+        <h2>Mulai Hari Ini,<br/><span class="teal-text">Jadi Developer</span> Besok!</h2>
+        <p>Ikuti roadmap terstruktur, kerjakan kuis AI harian, dan jaga streak-mu. Setiap langkah kecil membawa perubahan besar.</p>
+        <div class="dash-hero-cta">
+          <a href="roadmap.html" class="btn-teal" id="cta-roadmap">🗺️ Lihat Roadmap</a>
+          <a href="daily.html" class="btn-orange" id="cta-daily-hero">⚡ Quiz Harian</a>
         </div>
       </div>
-
-      <!-- AI DAILY QUIZ CARD -->
-      <div class="ai-quiz-card" id="ai-quiz-card">
-        <div class="ai-quiz-header">
-          <div class="ai-quiz-title-wrap">
-            <h2>🤖 Quiz Harian AI</h2>
-            <div class="ai-badge-row">
-              <span class="badge-ai">✨ Powered by Gemini AI</span>
-              <span class="badge-date" id="today-date-badge">Memuat tanggal...</span>
-              <span class="badge-green">+50 Poin</span>
+      <div class="dash-hero-visual">
+        <div class="hero-stats-card" id="progress-card">
+          <div class="shimmer"></div>
+          <div class="pcard-header" style="font-weight: 800; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 18px;">📈 Progress Belajar</div>
+          <div class="pcard-item">
+            <div class="pcard-meta">
+              <span>HTML</span>
+              <span class="pct" id="pct-html">0%</span>
             </div>
+            <progress id="prog-html" value="0" max="100"></progress>
           </div>
-          <button class="btn-regen" id="btn-regen" onclick="regenQuiz()" title="Buat soal baru">🔄 Buat Ulang Soal</button>
-        </div>
-
-        <!-- API Key Input -->
-        <div class="api-key-section" id="api-key-section">
-          <h4>🔑 Masukkan Gemini API Key</h4>
-          <p>Quiz harian dihasilkan secara otomatis oleh Google Gemini AI setiap hari. Masukkan API Key-mu untuk mengaktifkan fitur ini. API Key disimpan hanya di browser kamu (localStorage).</p>
-          <p style="margin-bottom:10px;">Dapatkan API Key gratis di: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:#c084fc;text-decoration:underline;">aistudio.google.com/apikey</a></p>
-          <div class="api-input-row">
-            <input type="password" class="api-key-input" id="api-key-input" placeholder="AIza... (paste Gemini API Key kamu di sini)"/>
-            <button class="btn-save-api" id="btn-save-api" onclick="saveApiKey()">💾 Simpan & Mulai</button>
+          <div class="pcard-item">
+            <div class="pcard-meta">
+              <span>CSS</span>
+              <span class="pct" id="pct-css">0%</span>
+            </div>
+            <progress id="prog-css" value="0" max="100"></progress>
           </div>
-        </div>
-
-        <!-- Already Done Banner -->
-        <div class="dq-done-banner" id="dq-done-banner">
-          <span style="font-size:1.5rem;">✅</span>
-          <div>
-            <div>Kamu sudah menyelesaikan quiz harian hari ini!</div>
-            <div style="font-size:0.85rem;font-weight:400;opacity:.8;margin-top:3px;" id="dq-done-score-text">Kembali besok untuk quiz baru 🚀</div>
+          <div class="pcard-item">
+            <div class="pcard-meta">
+              <span>JavaScript</span>
+              <span class="pct" id="pct-js">0%</span>
+            </div>
+            <progress id="prog-js" value="0" max="100"></progress>
           </div>
-        </div>
-
-        <!-- Loading -->
-        <div class="ai-loading" id="ai-loading" style="display:none;">
-          <div class="ai-spinner"></div>
-          <p>🤖 Gemini AI sedang membuat soal quiz untuk hari ini...</p>
-        </div>
-
-        <!-- Error -->
-        <div class="ai-error" id="ai-error"></div>
-
-        <!-- Quiz Body -->
-        <div class="ai-quiz-body" id="ai-quiz-body">
-          <div id="dq-questions-wrap"></div>
-          <div class="dq-submit-row">
-            <button class="btn-dq-submit" id="btn-dq-submit" onclick="submitDailyQuiz()">🎯 Periksa Jawaban</button>
+          <div class="level-progress-wrap" id="level-progress-wrap" style="margin-top: 18px;">
+            <div class="level-labels" style="margin-bottom: 6px;">
+              <span class="level-badge" id="level-label-foot">Level 1 – Newbie</span>
+              <span class="level-hint" id="level-next-foot"></span>
+            </div>
+            <div class="level-bar"><div class="level-bar-fill" id="level-prog-fill" style="width:0%"></div></div>
           </div>
-        </div>
-
-        <!-- Result -->
-        <div class="dq-result-card" id="dq-result-card">
-          <div class="dq-result-emoji" id="dq-result-emoji">🎉</div>
-          <div style="font-size:1.5rem;font-weight:900;" id="dq-result-title">Luar Biasa!</div>
-          <div class="dq-result-score" id="dq-result-score">5/5</div>
-          <div class="dq-result-label" id="dq-result-label">Kamu menjawab semua soal dengan benar!</div>
-          <div class="dq-pts-row">
-            <div class="dq-pts-chip chip-orange" id="dq-pts-chip">+50 Poin</div>
-            <div class="dq-pts-chip chip-fire" id="dq-streak-chip">🔥 Streak: 1 Hari</div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ARCHIVE -->
-      <div class="streak-archive-section" id="archive-section">
-        <h2>📅 Arsip Tantangan Sebelumnya</h2>
-        <div class="archive-grid" id="archive-grid">
-          <!-- Rendered by JS -->
         </div>
       </div>
+    </section>
 
-    </div>
+    <!-- STATS STRIP -->
+    <section class="dash-stats-strip" id="dash-stats-strip">
+      <div class="stat-strip-card">
+        <span class="stat-strip-icon">🔥</span>
+        <div>
+          <div class="stat-strip-val" id="strip-streak">0</div>
+          <div class="stat-strip-lbl">Hari Streak</div>
+        </div>
+      </div>
+      <div class="stat-strip-card">
+        <span class="stat-strip-icon">⭐</span>
+        <div>
+          <div class="stat-strip-val" id="strip-points">0</div>
+          <div class="stat-strip-lbl">Total Poin</div>
+        </div>
+      </div>
+      <div class="stat-strip-card">
+        <span class="stat-strip-icon">🏆</span>
+        <div>
+          <div class="stat-strip-val" id="strip-level">Lv 1</div>
+          <div class="stat-strip-lbl" id="strip-level-name">Newbie</div>
+        </div>
+      </div>
+      <div class="stat-strip-card">
+        <span class="stat-strip-icon">🎯</span>
+        <div>
+          <div class="stat-strip-val" id="strip-quizzes">0</div>
+          <div class="stat-strip-lbl">Quiz Selesai</div>
+        </div>
+      </div>
+    </section>
 
+    <!-- QUICK ACTIONS -->
+    <section class="dash-quick-actions" id="dash-quick-actions">
+      <a href="roadmap.html" class="quick-action-card" id="qa-roadmap">
+        <span class="qa-icon">🗺️</span>
+        <div>
+          <div class="qa-title">The Roadmap</div>
+          <div class="qa-desc">HTML → CSS → JavaScript</div>
+        </div>
+        <span class="qa-badge">3 Stage</span>
+      </a>
+      <a href="quiz.html" class="quick-action-card" id="qa-quiz">
+        <span class="qa-icon">🎯</span>
+        <div>
+          <div class="qa-title">Quiz Center</div>
+          <div class="qa-desc">Uji pemahaman per topik</div>
+        </div>
+        <span class="qa-badge" id="qa-quiz-badge">+50 Poin</span>
+      </a>
+      <a href="daily.html" class="quick-action-card" id="qa-daily">
+        <span class="qa-icon">⚡</span>
+        <div>
+          <div class="qa-title">Daily Challenge</div>
+          <div class="qa-desc">Soal baru dari AI setiap hari</div>
+        </div>
+        <span class="qa-badge" id="qa-daily-badge">Hari Ini</span>
+      </a>
+      <div class="quick-action-card" style="cursor:default;" id="qa-streak">
+        <span class="qa-icon">🔥</span>
+        <div>
+          <div class="qa-title">Streak Aktif</div>
+          <div class="qa-desc" id="qa-streak-desc">Jaga konsistensimu!</div>
+        </div>
+        <span class="qa-badge" id="qa-streak-badge">0 Hari</span>
+      </div>
+    </section>
+
+    <!-- GRID CARDS -->
+    <section class="dash-grid" id="dash-grid">
+
+      <!-- STREAK CARD -->
+      <div class="glass-card streak-card" id="card-streak">
+        <div class="card-header">
+          <span class="card-title">Daily Streak</span>
+          <span class="card-badge orange">Streak</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 10px 0;">
+          <div class="streak-big" id="streak-anim" style="font-size: 3.5rem; filter: drop-shadow(0 0 10px rgba(245,158,11,0.6));">🔥</div>
+          <div class="streak-number" id="streak-display" style="font-size: 3rem; font-weight: 900;">0</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Hari berturut-turut belajar</p>
+        </div>
+        <div class="streak-mini-row" id="streak-dots" style="display: flex; gap: 6px; justify-content: center; margin-top: 10px;"></div>
+        <div id="daily-status-wrap" style="margin-top: 12px; text-align: center;"></div>
+      </div>
+
+      <!-- DAILY CHALLENGE PREVIEW -->
+      <div class="glass-card challenge-card" id="card-challenge">
+        <div class="card-header">
+          <span class="card-badge orange" id="daily-badge-day">⚡ Hari ini</span>
+          <span class="card-badge green">+50 Poin</span>
+        </div>
+        <h3 id="daily-challenge-title" style="margin: 14px 0 6px; font-size: 1.15rem; font-weight: 800;">Quiz Harian AI</h3>
+        <p class="challenge-desc" id="daily-challenge-desc" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">"Jawab 5 soal coding yang dibuat khusus oleh AI Gemini setiap hari. Soal berbeda tiap hari!"</p>
+        <div class="code-preview-box" style="background: rgba(0,0,0,0.25); padding: 14px; border-radius: 10px; border: 1px solid var(--border); font-family: 'Fira Code', monospace; font-size: 0.76rem; line-height: 1.5; margin-bottom: 16px; overflow-x: auto;">
+          <span class="c-comm" style="color: #6a9955;">// 🤖 Gemini AI menghasilkan soal baru</span><br/>
+          <span class="c-comm" style="color: #6a9955;">// setiap hari secara otomatis</span><br/>
+          <span class="c-tag" style="color: #569cd6;">const</span> <span class="c-attr" style="color: #9cdcfe;">quiz</span> = <span class="c-str" style="color: #ce9178;">await</span> <span class="c-text">gemini</span>.<span class="c-tag" style="color: #dcdcaa;">generate</span>(<br/>
+          &nbsp;&nbsp;<span class="c-str" style="color: #ce9178;">"Buat 5 soal HTML/CSS/JS"</span><br/>
+          );
+        </div>
+        <a href="daily.html" class="btn-orange" id="cta-daily">Mulai Quiz Harian →</a>
+      </div>
+
+      <!-- QUICK QUIZ -->
+      <div class="glass-card quiz-card" id="card-quiz">
+        <div class="card-header">
+          <span class="card-badge purple">🎯 Quiz Center</span>
+          <span class="card-badge green">+30–50 Poin</span>
+        </div>
+        <h3 style="margin: 14px 0 6px; font-size: 1.15rem; font-weight: 800;">Uji Pemahaman</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">Selesaikan kuis per topik untuk naik level dan buka materi berikutnya.</p>
+        <div class="quiz-preview" id="quiz-preview-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+          <div class="qp-item" id="qp-html" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);">📝 HTML Basics — 5 soal</div>
+          <div class="qp-item" id="qp-css" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);">🎨 CSS Styling — 5 soal</div>
+          <div class="qp-item qp-locked" id="qp-js" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); opacity: 0.5;">🔒 JavaScript — Terkunci</div>
+        </div>
+        <a href="quiz.html" class="btn-teal" id="cta-quiz">Mulai Quiz →</a>
+      </div>
+
+    </section>
+
+    <!-- FOOTER -->
     <footer class="main-footer" id="footer">
       <p>© 2026 DevPath · Dibuat dengan ❤️ oleh siswa kelas 10 · Jalur belajar untuk semua</p>
     </footer>
+
   </main>
 
   <script src="script.js"></script>
   <script>
-  // =============================================
-  // DAILY QUIZ AI – daily.html
-  // =============================================
+  document.addEventListener('DOMContentLoaded', () => {
 
-  const TODAY = new Date().toDateString();
-  const DAY_LABELS = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
-  const MONTH_NAMES = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    // ── Greeting by time ──
+    const hour = new Date().getHours();
+    const greet = hour < 5 ? 'Selamat malam! 🌙' : hour < 12 ? 'Selamat pagi! ☀️' : hour < 15 ? 'Selamat siang! 🌤️' : hour < 18 ? 'Selamat sore! 🌅' : 'Selamat malam! 🌙';
+    const greetEl = document.getElementById('topbar-greeting');
+    if (greetEl) greetEl.textContent = greet;
 
-  // ── Helpers ──
-  function getPoints() { return parseInt(localStorage.getItem('devpath_points') || '0'); }
-  function setPoints(v) { localStorage.setItem('devpath_points', v); }
-  function getStreak() { return parseInt(localStorage.getItem('devpath_streak') || '0'); }
-  function setStreak(v) { localStorage.setItem('devpath_streak', v); }
-  function getLastVisit() { return localStorage.getItem('devpath_lastVisit') || ''; }
-  function setLastVisit(v) { localStorage.setItem('devpath_lastVisit', v); }
-  function getDailyDone() { return localStorage.getItem('devpath_daily_done') || ''; }
-  function setDailyDone(v) { localStorage.setItem('devpath_daily_done', v); }
-  function getDailyScore() { return localStorage.getItem('devpath_daily_score') || ''; }
-  function setDailyScore(v) { localStorage.setItem('devpath_daily_score', v); }
-  function getApiKey() { return localStorage.getItem('devpath_gemini_key') || ''; }
-  function setApiKey(v) { localStorage.setItem('devpath_gemini_key', v); }
-  function getCachedQuiz(date) {
-    try { return JSON.parse(localStorage.getItem(`devpath_quiz_cache_${date}`) || 'null'); }
-    catch { return null; }
-  }
-  function setCachedQuiz(date, data) {
-    localStorage.setItem(`devpath_quiz_cache_${date}`, JSON.stringify(data));
-  }
-  function getDailyHistory() {
-    try { return JSON.parse(localStorage.getItem('devpath_daily_history') || '[]'); }
-    catch { return []; }
-  }
-  function addToHistory(entry) {
-    const hist = getDailyHistory();
-    if (!hist.find(h => h.date === entry.date)) hist.unshift(entry);
-    localStorage.setItem('devpath_daily_history', JSON.stringify(hist.slice(0, 14)));
-  }
+    // ── Stats strip ──
+    const streak = dpGetInt('streak', 0);
+    const pts    = dpGetInt('points', 0);
+    const { lv, name, next, nextPts } = getLevel(pts);
 
-  function getLevel() {
-    const pts = getPoints();
-    if (pts >= 500) return { lv: 'Level 6', name: 'Senior Dev' };
-    if (pts >= 350) return { lv: 'Level 5', name: 'Mid Dev' };
-    if (pts >= 200) return { lv: 'Level 4', name: 'Junior Dev' };
-    if (pts >= 100) return { lv: 'Level 3', name: 'Apprentice' };
-    if (pts >= 50)  return { lv: 'Level 2', name: 'Starter' };
-    return { lv: 'Level 1', name: 'Newbie' };
-  }
-
-  // ── Streak Logic (canonical) ──
-  function computeStreak() {
-    let streak = parseInt(localStorage.getItem('devpath_streak') || '0');
-    const lastVisit = getLastVisit();
-    if (lastVisit === TODAY) return streak; // already updated today
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    if (lastVisit === yesterday.toDateString()) {
-      streak += 1;
-    } else if (lastVisit === '') {
-      streak = 1; // first ever visit
-    } else {
-      streak = 1; // broke streak
-    }
-    setStreak(streak);
-    setLastVisit(TODAY);
-    return streak;
-  }
-
-  // ── Update all UI stats ──
-  function updateAllStats() {
-    const streak = getStreak();
-    const pts = getPoints();
-    const { lv, name } = getLevel();
-    const ids = {
-      'sidebar-streak': streak,
-      'sidebar-points': pts,
-      'sidebar-level': lv,
-      'topbar-streak-badge': `🔥 ${streak} Hari`,
-      'streak-hero-num': streak,
+    const animateNum = (el, val) => {
+      if (!el) return;
+      let start = 0;
+      const dur = 800;
+      const t0  = performance.now();
+      const step = ts => {
+        const p = Math.min((ts - t0) / dur, 1);
+        el.textContent = Math.round(p * val);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
     };
-    Object.entries(ids).forEach(([id, val]) => {
-      const el = document.getElementById(id);
-      if (el) el.textContent = val;
-    });
-    const sll = document.getElementById('sidebar-level-lbl');
-    if (sll) sll.textContent = name;
-  }
 
-  // ── Render Week Dots ──
-  function renderWeekDots() {
-    const row = document.getElementById('streak-week-row');
-    if (!row) return;
-    row.innerHTML = '';
-    const streak = getStreak();
-    const dailyDone = getDailyDone() === TODAY;
+    animateNum(document.getElementById('strip-streak'), streak);
+    animateNum(document.getElementById('strip-points'), pts);
+    const sl  = document.getElementById('strip-level');
+    const sln = document.getElementById('strip-level-name');
+    if (sl)  sl.textContent  = `Lv ${lv.split(' ')[1]}`;
+    if (sln) sln.textContent = name;
 
-    // Build last 7 days
-    const days = [];
-    for (let i = 6; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      days.push(d);
-    }
+    // Completed quizzes count
+    const cq = JSON.parse(localStorage.getItem('devpath_completed_quizzes') || '[]');
+    animateNum(document.getElementById('strip-quizzes'), cq.length);
 
-    days.forEach((d, idx) => {
-      const isToday = d.toDateString() === TODAY;
-      const dayIdx = d.getDay(); // 0=Sun
-      const span = document.createElement('div');
-      span.className = 'sdot-lg';
+    // ── Quick actions ──
+    const qaStreakBadge = document.getElementById('qa-streak-badge');
+    const qaStreakDesc  = document.getElementById('qa-streak-desc');
+    if (qaStreakBadge) qaStreakBadge.textContent = streak + ' Hari';
+    if (qaStreakDesc)  qaStreakDesc.textContent  = streak > 0 ? `🔥 ${streak} hari berturut!` : 'Jaga konsistensimu!';
 
-      // Determine if "done" based on streak count
-      // Days before today: done if within streak range
-      const daysAgo = 6 - idx;
-      const isDone = !isToday && daysAgo < streak;
-      const isTodayDone = isToday && dailyDone;
-      const isTodayPending = isToday && !dailyDone;
+    const dailyDone = dpGet('daily_done') === new Date().toDateString();
+    const qaDailyBadge = document.getElementById('qa-daily-badge');
+    if (qaDailyBadge) qaDailyBadge.textContent = dailyDone ? '✅ Selesai' : 'Belum';
+    if (qaDailyBadge && dailyDone) { qaDailyBadge.style.background = 'rgba(6,214,160,0.15)'; qaDailyBadge.style.color = 'var(--green)'; qaDailyBadge.style.borderColor = 'rgba(6,214,160,0.3)'; }
 
-      if (isDone) span.classList.add('done');
-      else if (isTodayDone) span.classList.add('today-done');
-      else if (isTodayPending) span.classList.add('today-pending');
-
-      span.innerHTML = `
-        <span>${isTodayDone || isDone ? '🔥' : isTodayPending ? '⭕' : '·'}</span>
-        <span class="dot-day">${DAY_LABELS[dayIdx]}</span>
-      `;
-      row.appendChild(span);
-    });
-  }
-
-  // ── Render Archive ──
-  function renderArchive() {
-    const grid = document.getElementById('archive-grid');
-    if (!grid) return;
-    const hist = getDailyHistory();
-
-    // Static fallbacks
-    const staticArchive = [
-      { date: 'Challenge #3', title: 'Buat formulir login sederhana', pts: 25, done: true },
-      { date: 'Challenge #2', title: 'Buat halaman dengan gambar, heading, dan paragraf', pts: 20, done: true },
-      { date: 'Challenge #1', title: 'Buat struktur HTML dasar dengan head dan body', pts: 20, done: true },
-    ];
-
-    let items = hist.slice(0, 9);
-    if (items.length < 3) items = [...items, ...staticArchive].slice(0, 6);
-
-    grid.innerHTML = items.map(item => {
-      const done = item.done !== false;
-      return `
-        <div class="archive-card ${done ? 'done-card' : ''}">
-          <div class="arch-top">
-            <span class="${done ? 'badge-green' : 'badge-orange'}">${done ? '✅ Selesai' : '⚡ Lewat'}</span>
-            <span class="arch-pts">${item.pts ? '+'+item.pts+' Poin' : ''}</span>
-          </div>
-          <h4>${item.date || 'Daily Quiz'}</h4>
-          <p>${item.title || item.topic || ''}</p>
-        </div>
-      `;
-    }).join('');
-  }
-
-  // ── Date Badge ──
-  function renderDateBadge() {
-    const d = new Date();
-    const badge = document.getElementById('today-date-badge');
-    if (badge) badge.textContent = `📅 ${d.getDate()} ${MONTH_NAMES[d.getMonth()]} ${d.getFullYear()}`;
-  }
-
-  // ── API Key Section ──
-  let quizData = null;
-  let userAnswers = {};
-
-  function initApiSection() {
-    const key = getApiKey();
-    const input = document.getElementById('api-key-input');
-    const apiSection = document.getElementById('api-key-section');
-    if (key) {
-      if (apiSection) apiSection.style.display = 'none';
-      checkDailyStatus();
+    // ── Level progress in card ──
+    const lvFoot = document.getElementById('level-label-foot');
+    const lvNext = document.getElementById('level-next-foot');
+    const lvFill = document.getElementById('level-prog-fill');
+    if (lvFoot) lvFoot.textContent = `${lv} – ${name}`;
+    if (next) {
+      if (lvNext) lvNext.textContent = `${nextPts} poin lagi → Lv ${parseInt(lv.split(' ')[1]) + 1}`;
+      const thresholds = [0, 50, 100, 200, 350, 500];
+      const lvNum = parseInt(lv.split(' ')[1]) - 1;
+      const prev  = thresholds[lvNum] || 0;
+      const pct   = Math.min(100, Math.round(((pts - prev) / (next - prev)) * 100));
+      if (lvFill) lvFill.style.width = pct + '%';
     } else {
-      if (input) input.value = '';
-    }
-  }
-
-  function saveApiKey() {
-    const val = document.getElementById('api-key-input').value.trim();
-    if (!val) { alert('API Key tidak boleh kosong!'); return; }
-    if (!val.startsWith('AIza')) { alert('Format API Key tidak valid. Pastikan dimulai dengan "AIza..."'); return; }
-    setApiKey(val);
-    document.getElementById('api-key-section').style.display = 'none';
-    checkDailyStatus();
-  }
-
-  function checkDailyStatus() {
-    const doneDateStr = getDailyDone();
-    if (doneDateStr === TODAY) {
-      // Already done today
-      const score = getDailyScore();
-      const banner = document.getElementById('dq-done-banner');
-      if (banner) {
-        banner.classList.add('show');
-        const txt = document.getElementById('dq-done-score-text');
-        if (txt && score) txt.textContent = `Skor kamu hari ini: ${score} · Kembali besok untuk quiz baru 🚀`;
-      }
-      return;
-    }
-    // Load quiz
-    loadDailyQuiz(false);
-  }
-
-  // ── Load / Generate Quiz ──
-  async function loadDailyQuiz(forceRegen) {
-    const key = getApiKey();
-    if (!key) return;
-
-    // Check cache
-    const cached = getCachedQuiz(TODAY);
-    if (cached && !forceRegen) {
-      quizData = cached;
-      renderDailyQuiz();
-      return;
-    }
-    // Generate with Gemini
-    showLoading(true);
-    hideError();
-    try {
-      const questions = await generateWithGemini(key);
-      quizData = questions;
-      setCachedQuiz(TODAY, questions);
-      renderDailyQuiz();
-    } catch (err) {
-      showLoading(false);
-      showError('❌ Gagal terhubung ke Gemini API: ' + err.message + '<br><br>Kemungkinan penyebab:<br>• API Key tidak valid atau sudah kadaluarsa<br>• Koneksi internet bermasalah<br>• Kuota API habis<br><br>Coba periksa kembali API Key kamu atau coba lagi nanti.');
-    }
-  }
-
-  async function generateWithGemini(apiKey) {
-    const d = new Date();
-    const topics = ['HTML', 'CSS', 'JavaScript', 'Web Development', 'HTML & CSS', 'CSS & JavaScript'];
-    const topic = topics[d.getDate() % topics.length];
-    const dateStr = `${d.getDate()}-${d.getMonth()+1}-${d.getFullYear()}`;
-
-    const prompt = `Kamu adalah guru coding yang mengajar siswa SMA kelas 10 tentang web development. 
-Buat 5 soal pilihan ganda tentang topik "${topic}" untuk quiz harian tanggal ${dateStr}.
-Soal harus dalam Bahasa Indonesia, mudah dipahami, dan cocok untuk pemula.
-
-Kembalikan HANYA JSON valid tanpa markdown, tanpa komentar, dalam format ini:
-{
-  "topic": "${topic}",
-  "questions": [
-    {
-      "q": "Pertanyaan lengkap di sini?",
-      "opts": ["Opsi A", "Opsi B", "Opsi C", "Opsi D"],
-      "ans": 0,
-      "exp": "Penjelasan singkat mengapa jawaban ini benar."
-    }
-  ]
-}
-
-Aturan:
-- "ans" adalah INDEX (0-3) dari jawaban yang BENAR di array opts
-- Buat soal yang bervariasi tingkat kesulitannya
-- Penjelasan (exp) harus membantu pemahaman siswa
-- JANGAN gunakan markdown, HANYA JSON murni`;
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 2048,
-          }
-        })
-      }
-    );
-
-    if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
-      throw new Error(err?.error?.message || `HTTP ${response.status}`);
+      if (lvNext) lvNext.textContent = '🏆 MAX LEVEL';
+      if (lvFill) lvFill.style.width = '100%';
     }
 
-    const data = await response.json();
-    const raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-
-    // Extract JSON from response (remove any markdown wrapping)
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Format respons AI tidak valid');
-
-    const parsed = JSON.parse(jsonMatch[0]);
-    if (!parsed.questions || !Array.isArray(parsed.questions)) throw new Error('Struktur data tidak valid');
-
-    return parsed;
-  }
-
-  function showLoading(show) {
-    const el = document.getElementById('ai-loading');
-    if (el) el.style.display = show ? 'flex' : 'none';
-  }
-
-  function showError(msg) {
-    const el = document.getElementById('ai-error');
-    if (el) { el.innerHTML = msg; el.classList.add('show'); }
-  }
-
-  function hideError() {
-    const el = document.getElementById('ai-error');
-    if (el) el.classList.remove('show');
-  }
-
-  // ── Render Quiz ──
-  function renderDailyQuiz() {
-    showLoading(false);
-    if (!quizData || !quizData.questions) return;
-
-    userAnswers = {};
-    const wrap = document.getElementById('dq-questions-wrap');
-    const letters = ['A', 'B', 'C', 'D'];
-
-    wrap.innerHTML = quizData.questions.map((q, qi) => `
-      <div class="dq-question-card" id="dq-card-${qi}">
-        <div class="dq-q-num">Soal ${qi + 1} · ${quizData.topic || 'Web Dev'}</div>
-        <div class="dq-q-text">${q.q}</div>
-        <div class="dq-opts" id="dq-opts-${qi}">
-          ${q.opts.map((opt, oi) => `
-            <button class="dq-opt" id="dq-opt-${qi}-${oi}" onclick="selectDailyOpt(${qi}, ${oi})">
-              <span class="opt-letter">${letters[oi]}</span>
-              <span>${opt}</span>
-            </button>
-          `).join('')}
-        </div>
-        <div class="dq-explanation" id="dq-exp-${qi}"></div>
-      </div>
-    `).join('');
-
-    document.getElementById('ai-quiz-body').classList.add('show');
-  }
-
-  function selectDailyOpt(qi, oi) {
-    const alreadyAnswered = Object.keys(userAnswers).length > 0 && document.getElementById('btn-dq-submit').disabled;
-    if (alreadyAnswered) return;
-
-    userAnswers[qi] = oi;
-
-    // Visual highlight
-    const opts = document.querySelectorAll(`#dq-opts-${qi} .dq-opt`);
-    opts.forEach((btn, i) => {
-      btn.style.borderColor = i === oi ? 'var(--teal)' : '';
-      btn.style.background = i === oi ? 'rgba(42,157,143,.15)' : '';
-    });
-  }
-
-  function submitDailyQuiz() {
-    if (!quizData) return;
-    const total = quizData.questions.length;
-
-    // Check all answered
-    if (Object.keys(userAnswers).length < total) {
-      alert(`Jawab semua ${total} soal terlebih dahulu!`);
-      return;
-    }
-
-    let score = 0;
-    const letters = ['A', 'B', 'C', 'D'];
-
-    quizData.questions.forEach((q, qi) => {
-      const selected = userAnswers[qi];
-      const correct = q.ans;
-      const isCorrect = selected === correct;
-      if (isCorrect) score++;
-
-      // Disable all options
-      const opts = document.querySelectorAll(`#dq-opts-${qi} .dq-opt`);
-      opts.forEach((btn, i) => {
-        btn.disabled = true;
-        btn.style.borderColor = '';
-        btn.style.background = '';
-        if (i === correct) btn.classList.add('correct');
-        else if (i === selected && !isCorrect) btn.classList.add('wrong');
-      });
-
-      // Show explanation
-      const expEl = document.getElementById(`dq-exp-${qi}`);
-      if (expEl) {
-        expEl.textContent = q.exp;
-        expEl.className = `dq-explanation show ${isCorrect ? 'ok' : 'err'}`;
+    // ── Quiz preview cards ──
+    const cats     = ['html', 'css', 'javascript'];
+    const qpIds    = ['qp-html', 'qp-css', 'qp-js'];
+    const qpLabels = ['📝 HTML Basics — 5 soal', '🎨 CSS Styling — 5 soal', '⚡ JavaScript — 5 soal'];
+    cats.forEach((cat, i) => {
+      const el = document.getElementById(qpIds[i]);
+      if (!el) return;
+      if (cq.includes(cat)) {
+        el.innerHTML = qpLabels[i] + ' ✅';
+        el.classList.remove('qp-locked');
+        el.style.color = 'var(--green)';
+      } else if (i > 0 && !cq.includes(cats[i-1])) {
+        el.textContent = '🔒 ' + (['HTML Basics','CSS Styling','JavaScript'][i]) + ' — Terkunci';
+        el.classList.add('qp-locked');
+      } else {
+        el.textContent = qpLabels[i];
+        el.classList.remove('qp-locked');
+        el.style.color = '';
       }
     });
 
-    document.getElementById('btn-dq-submit').disabled = true;
-
-    // Show result
-    showDailyResult(score, total);
-  }
-
-  function showDailyResult(score, total) {
-    const pct = Math.round((score / total) * 100);
-    const pts = pct >= 80 ? 50 : pct >= 60 ? 35 : pct >= 40 ? 20 : 10;
-
-    let emoji = '😅', title = 'Coba Lagi Besok!';
-    if (pct >= 80) { emoji = '🎉'; title = 'Luar Biasa!'; }
-    else if (pct >= 60) { emoji = '👍'; title = 'Bagus Sekali!'; }
-    else if (pct >= 40) { emoji = '💪'; title = 'Terus Semangat!'; }
-
-    document.getElementById('dq-result-emoji').textContent = emoji;
-    document.getElementById('dq-result-title').textContent = title;
-    document.getElementById('dq-result-score').textContent = `${score}/${total}`;
-    document.getElementById('dq-result-label').textContent = `Kamu menjawab ${score} dari ${total} soal dengan benar (${pct}%)`;
-
-    // Update streak & points
-    const newStreak = computeStreak(); // already called but also marks today
-    setDailyDone(TODAY);
-    setDailyScore(`${score}/${total}`);
-    setPoints(getPoints() + pts);
-
-    document.getElementById('dq-pts-chip').textContent = `+${pts} Poin Ditambahkan`;
-    document.getElementById('dq-streak-chip').textContent = `🔥 Streak: ${newStreak} Hari`;
-
-    // Save to history
-    addToHistory({
-      date: `${new Date().getDate()} ${MONTH_NAMES[new Date().getMonth()]}`,
-      title: `Quiz ${quizData.topic || 'Harian'} — ${score}/${total} benar`,
-      pts: pts,
-      done: true
-    });
-
-    document.getElementById('dq-result-card').classList.add('show');
-    updateAllStats();
-    renderWeekDots();
-    renderArchive();
-
-    // Scroll to result
-    setTimeout(() => document.getElementById('dq-result-card').scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
-  }
-
-  function regenQuiz() {
-    const doneDateStr = getDailyDone();
-    if (doneDateStr === TODAY) {
-      if (!confirm('Kamu sudah menyelesaikan quiz hari ini. Buat ulang soal?')) return;
+    // ── Daily status badge ──
+    const statusWrap = document.getElementById('daily-status-wrap');
+    if (statusWrap) {
+      statusWrap.innerHTML = dailyDone
+        ? `<span class="daily-status-badge daily-done-badge">✅ Quiz harian selesai!</span>`
+        : `<span class="daily-status-badge daily-pending-badge">⭕ Belum dikerjakan hari ini</span>`;
     }
-    // Clear cached quiz
-    localStorage.removeItem(`devpath_quiz_cache_${TODAY}`);
-    document.getElementById('ai-quiz-body').classList.remove('show');
-    document.getElementById('dq-result-card').classList.remove('show');
-    document.getElementById('dq-done-banner').classList.remove('show');
-    document.getElementById('btn-dq-submit').disabled = false;
-    quizData = null;
-    userAnswers = {};
-    if (getApiKey()) loadDailyQuiz(true);
-  }
 
-  // ── INIT ──
-  computeStreak();       // Update streak on page load
-  updateAllStats();
-  renderWeekDots();
-  renderDateBadge();
-  initApiSection();
-  renderArchive();
+    // ── Hero floating particles ──
+    const hero = document.getElementById('dash-hero');
+    if (hero) {
+      for (let i = 0; i < 8; i++) {
+        const p = document.createElement('div');
+        p.className = 'hero-particle';
+        const size = Math.random() * 6 + 3;
+        p.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${Math.random() * 80 + 10}%;
+          bottom:0;
+          animation-duration:${Math.random() * 8 + 6}s;
+          animation-delay:${Math.random() * 5}s;
+          opacity:${Math.random() * 0.2 + 0.05};
+        `;
+        hero.appendChild(p);
+      }
+    }
+  });
   </script>
 </body>
 </html>
