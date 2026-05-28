@@ -1,15 +1,19 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>DevPath – Jalur Belajar Coding Kamu</title>
-  <meta name="description" content="DevPath adalah platform belajar coding interaktif untuk siswa kelas 10. Ikuti roadmap, kerjakan kuis, dan jaga Daily Streak-mu!"/>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Challenge AI – DevPath</title>
+  <meta name="description"
+    content="Tantangan coding harian AI DevPath. Jawab 5 kuis harian dari AI Gemini untuk menjaga streak dan meningkatkan skill-mu." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
 
   <!-- SIDEBAR -->
@@ -19,356 +23,412 @@
       <span class="logo-text">Dev<span class="logo-accent">Path</span></span>
     </div>
     <nav class="sidebar-nav">
-      <a href="index.html" class="sidelink active" id="nav-home">
-        <span class="sidelink-icon">🏠</span><span>Dashboard</span>
-      </a>
-      <a href="roadmap.html" class="sidelink" id="nav-roadmap">
-        <span class="sidelink-icon">🗺️</span><span>The Roadmap</span>
-      </a>
-      <a href="quiz.html" class="sidelink" id="nav-quiz">
-        <span class="sidelink-icon">🎯</span><span>Quiz Center</span>
-      </a>
-      <a href="daily.html" class="sidelink" id="nav-daily">
-        <span class="sidelink-icon">⚡</span><span>Daily Challenge</span>
-      </a>
+      <a href="index.html" class="sidelink" id="nav-home"><span
+          class="sidelink-icon">🏠</span><span>Dashboard</span></a>
+      <a href="roadmap.html" class="sidelink" id="nav-roadmap"><span class="sidelink-icon">🗺️</span><span>The
+          Roadmap</span></a>
+      <a href="quiz.html" class="sidelink" id="nav-quiz"><span class="sidelink-icon">🎯</span><span>Quiz
+          Center</span></a>
+      <a href="daily.html" class="sidelink active" id="nav-daily"><span class="sidelink-icon">⚡</span><span>Daily
+          Challenge</span></a>
     </nav>
     <div class="sidebar-stats">
       <h4 class="stats-title">Statistik Kamu</h4>
-      <div class="stat-item" id="stat-streak">
-        <span class="stat-icon streak-icon">🔥</span>
+      <div class="stat-item"><span class="stat-icon streak-icon">🔥</span>
         <div>
           <div class="stat-val" id="sidebar-streak">0</div>
           <div class="stat-lbl">Hari Streak</div>
         </div>
       </div>
-      <div class="stat-item" id="stat-poin">
-        <span class="stat-icon">⭐</span>
+      <div class="stat-item"><span class="stat-icon">⭐</span>
         <div>
           <div class="stat-val" id="sidebar-points">0</div>
           <div class="stat-lbl">Total Poin</div>
         </div>
       </div>
-      <div class="stat-item" id="stat-level">
-        <span class="stat-icon">🏆</span>
+      <div class="stat-item"><span class="stat-icon">🏆</span>
         <div>
           <div class="stat-val" id="sidebar-level">Level 1</div>
           <div class="stat-lbl" id="sidebar-level-lbl">Newbie</div>
         </div>
       </div>
     </div>
-    <button class="hamburger-close" id="sidebar-close" aria-label="Tutup sidebar">✕</button>
+    <button class="hamburger-close" id="sidebar-close">✕</button>
   </aside>
-
-  <!-- OVERLAY -->
   <div class="overlay" id="overlay"></div>
 
-  <!-- MAIN CONTENT -->
   <main class="main-content" id="main">
-
-    <!-- TOP BAR -->
+    <!-- TOPBAR -->
     <header class="topbar">
-      <button class="hamburger" id="hamburger" aria-label="Buka menu">☰</button>
+      <button class="hamburger" id="hamburger">☰</button>
       <div class="topbar-title">
-        <h1>Dashboard</h1>
-        <span id="topbar-greeting">Selamat datang kembali! 👋</span>
+        <h1>Daily Challenge AI</h1>
+        <span>Tantangan kuis cerdas baru setiap hari ⚡</span>
       </div>
-      <div class="topbar-streak">
-        <span class="fire-badge" id="topbar-streak-badge">🔥 0 Hari</span>
-      </div>
+      <div class="topbar-streak"><span class="fire-badge" id="topbar-streak-badge">🔥 0 Hari</span></div>
     </header>
 
-    <!-- HERO GREETING -->
-    <section class="dash-hero" id="dash-hero">
-      <!-- Floating particles (injected by JS) -->
-      <div class="dash-hero-text">
-        <div class="greeting-badge">🚀 Jalur Belajar Interaktif untuk Kelas 10</div>
-        <h2>Mulai Hari Ini,<br/><span class="teal-text">Jadi Developer</span> Besok!</h2>
-        <p>Ikuti roadmap terstruktur, kerjakan kuis AI harian, dan jaga streak-mu. Setiap langkah kecil membawa perubahan besar.</p>
-        <div class="dash-hero-cta">
-          <a href="roadmap.html" class="btn-teal" id="cta-roadmap">🗺️ Lihat Roadmap</a>
-          <a href="daily.html" class="btn-orange" id="cta-daily-hero">⚡ Quiz Harian</a>
-        </div>
-      </div>
-      <div class="dash-hero-visual">
-        <div class="hero-stats-card" id="progress-card">
-          <div class="shimmer"></div>
-          <div class="pcard-header" style="font-weight: 800; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 18px;">📈 Progress Belajar</div>
-          <div class="pcard-item">
-            <div class="pcard-meta">
-              <span>HTML</span>
-              <span class="pct" id="pct-html">0%</span>
-            </div>
-            <progress id="prog-html" value="0" max="100"></progress>
-          </div>
-          <div class="pcard-item">
-            <div class="pcard-meta">
-              <span>CSS</span>
-              <span class="pct" id="pct-css">0%</span>
-            </div>
-            <progress id="prog-css" value="0" max="100"></progress>
-          </div>
-          <div class="pcard-item">
-            <div class="pcard-meta">
-              <span>JavaScript</span>
-              <span class="pct" id="pct-js">0%</span>
-            </div>
-            <progress id="prog-js" value="0" max="100"></progress>
-          </div>
-          <div class="level-progress-wrap" id="level-progress-wrap" style="margin-top: 18px;">
-            <div class="level-labels" style="margin-bottom: 6px;">
-              <span class="level-badge" id="level-label-foot">Level 1 – Newbie</span>
-              <span class="level-hint" id="level-next-foot"></span>
-            </div>
-            <div class="level-bar"><div class="level-bar-fill" id="level-prog-fill" style="width:0%"></div></div>
+    <!-- CONTENT SECTION -->
+    <section class="daily-section" id="daily-section">
+
+      <!-- STREAK HERO CARD -->
+      <div class="streak-hero">
+        <div class="streak-fire-big">🔥</div>
+        <div class="streak-hero-info">
+          <div class="streak-hero-number" id="streak-hero-num">0</div>
+          <div class="streak-hero-label">Hari Streak Aktif</div>
+          <div class="streak-week-row" id="streak-dots">
+            <!-- Rendered by script.js -->
           </div>
         </div>
       </div>
-    </section>
 
-    <!-- STATS STRIP -->
-    <section class="dash-stats-strip" id="dash-stats-strip">
-      <div class="stat-strip-card">
-        <span class="stat-strip-icon">🔥</span>
-        <div>
-          <div class="stat-strip-val" id="strip-streak">0</div>
-          <div class="stat-strip-lbl">Hari Streak</div>
+      <!-- GEMINI API KEY SECTION -->
+      <div class="api-key-section" id="api-key-block">
+        <h4>🔑 Kunci API Gemini (Opsional)</h4>
+        <p>Gunakan API Key Gemini Anda sendiri untuk menghasilkan pertanyaan AI yang unik & tidak terbatas setiap harinya secara langsung. Jika kosong, sistem otomatis menggunakan <strong>Demo Mode</strong> dengan bank soal berkualitas tinggi.</p>
+        <div class="api-input-row">
+          <input type="password" id="gemini-key-input" class="api-key-input" placeholder="Masukkan AIzaSy... API Key Anda" />
+          <button class="btn-save-api" id="btn-save-key" onclick="saveApiKey()">Simpan Key</button>
         </div>
-      </div>
-      <div class="stat-strip-card">
-        <span class="stat-strip-icon">⭐</span>
-        <div>
-          <div class="stat-strip-val" id="strip-points">0</div>
-          <div class="stat-strip-lbl">Total Poin</div>
-        </div>
-      </div>
-      <div class="stat-strip-card">
-        <span class="stat-strip-icon">🏆</span>
-        <div>
-          <div class="stat-strip-val" id="strip-level">Lv 1</div>
-          <div class="stat-strip-lbl" id="strip-level-name">Newbie</div>
-        </div>
-      </div>
-      <div class="stat-strip-card">
-        <span class="stat-strip-icon">🎯</span>
-        <div>
-          <div class="stat-strip-val" id="strip-quizzes">0</div>
-          <div class="stat-strip-lbl">Quiz Selesai</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- QUICK ACTIONS -->
-    <section class="dash-quick-actions" id="dash-quick-actions">
-      <a href="roadmap.html" class="quick-action-card" id="qa-roadmap">
-        <span class="qa-icon">🗺️</span>
-        <div>
-          <div class="qa-title">The Roadmap</div>
-          <div class="qa-desc">HTML → CSS → JavaScript</div>
-        </div>
-        <span class="qa-badge">3 Stage</span>
-      </a>
-      <a href="quiz.html" class="quick-action-card" id="qa-quiz">
-        <span class="qa-icon">🎯</span>
-        <div>
-          <div class="qa-title">Quiz Center</div>
-          <div class="qa-desc">Uji pemahaman per topik</div>
-        </div>
-        <span class="qa-badge" id="qa-quiz-badge">+50 Poin</span>
-      </a>
-      <a href="daily.html" class="quick-action-card" id="qa-daily">
-        <span class="qa-icon">⚡</span>
-        <div>
-          <div class="qa-title">Daily Challenge</div>
-          <div class="qa-desc">Soal baru dari AI setiap hari</div>
-        </div>
-        <span class="qa-badge" id="qa-daily-badge">Hari Ini</span>
-      </a>
-      <div class="quick-action-card" style="cursor:default;" id="qa-streak">
-        <span class="qa-icon">🔥</span>
-        <div>
-          <div class="qa-title">Streak Aktif</div>
-          <div class="qa-desc" id="qa-streak-desc">Jaga konsistensimu!</div>
-        </div>
-        <span class="qa-badge" id="qa-streak-badge">0 Hari</span>
-      </div>
-    </section>
-
-    <!-- GRID CARDS -->
-    <section class="dash-grid" id="dash-grid">
-
-      <!-- STREAK CARD -->
-      <div class="glass-card streak-card" id="card-streak">
-        <div class="card-header">
-          <span class="card-title">Daily Streak</span>
-          <span class="card-badge orange">Streak</span>
-        </div>
-        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 10px 0;">
-          <div class="streak-big" id="streak-anim" style="font-size: 3.5rem; filter: drop-shadow(0 0 10px rgba(245,158,11,0.6));">🔥</div>
-          <div class="streak-number" id="streak-display" style="font-size: 3rem; font-weight: 900;">0</div>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">Hari berturut-turut belajar</p>
-        </div>
-        <div class="streak-mini-row" id="streak-dots" style="display: flex; gap: 6px; justify-content: center; margin-top: 10px;"></div>
-        <div id="daily-status-wrap" style="margin-top: 12px; text-align: center;"></div>
       </div>
 
-      <!-- DAILY CHALLENGE PREVIEW -->
-      <div class="glass-card challenge-card" id="card-challenge">
-        <div class="card-header">
-          <span class="card-badge orange" id="daily-badge-day">⚡ Hari ini</span>
-          <span class="card-badge green">+50 Poin</span>
+      <!-- AI QUIZ CARD -->
+      <div class="ai-quiz-card" id="quiz-card-wrap">
+        
+        <div class="ai-quiz-header">
+          <div class="ai-quiz-title-wrap">
+            <h2>🎯 Quiz Harian AI</h2>
+            <div class="ai-badge-row">
+              <span class="badge-ai">🤖 Gemini 1.5 Flash</span>
+              <span class="badge-date" id="quiz-date-lbl">Hari Ini</span>
+            </div>
+          </div>
         </div>
-        <h3 id="daily-challenge-title" style="margin: 14px 0 6px; font-size: 1.15rem; font-weight: 800;">Quiz Harian AI</h3>
-        <p class="challenge-desc" id="daily-challenge-desc" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">"Jawab 5 soal coding yang dibuat khusus oleh AI Gemini setiap hari. Soal berbeda tiap hari!"</p>
-        <div class="code-preview-box" style="background: rgba(0,0,0,0.25); padding: 14px; border-radius: 10px; border: 1px solid var(--border); font-family: 'Fira Code', monospace; font-size: 0.76rem; line-height: 1.5; margin-bottom: 16px; overflow-x: auto;">
-          <span class="c-comm" style="color: #6a9955;">// 🤖 Gemini AI menghasilkan soal baru</span><br/>
-          <span class="c-comm" style="color: #6a9955;">// setiap hari secara otomatis</span><br/>
-          <span class="c-tag" style="color: #569cd6;">const</span> <span class="c-attr" style="color: #9cdcfe;">quiz</span> = <span class="c-str" style="color: #ce9178;">await</span> <span class="c-text">gemini</span>.<span class="c-tag" style="color: #dcdcaa;">generate</span>(<br/>
-          &nbsp;&nbsp;<span class="c-str" style="color: #ce9178;">"Buat 5 soal HTML/CSS/JS"</span><br/>
-          );
+
+        <!-- DONE BANNER -->
+        <div class="dq-done-banner" id="done-banner">
+          <span>🎉 Luar biasa! Kamu sudah menyelesaikan Quiz Harian untuk hari ini. Jaga terus konsistensimu besok!</span>
+          <button class="btn-regen" onclick="forceRegenQuiz()">Hasilkan Soal Baru 🔄</button>
         </div>
-        <a href="daily.html" class="btn-orange" id="cta-daily">Mulai Quiz Harian →</a>
+
+        <!-- LOADING STATE -->
+        <div class="ai-loading" id="quiz-loading" style="display: none;">
+          <div class="spinner"></div>
+          <p>Sedang merumuskan soal coding yang cocok untuk Anda... <br/><strong>Gemini AI sedang berpikir 🧠</strong></p>
+        </div>
+
+        <!-- AI QUIZ BODY -->
+        <div class="ai-quiz-body" id="quiz-body">
+          <div id="questions-container">
+            <!-- Questions rendered here dynamically -->
+          </div>
+          <div class="dq-submit-row">
+            <button class="btn-dq-submit" id="btn-submit-quiz" onclick="submitQuiz()" disabled>Kirim Jawaban & Klaim Poin 🏆</button>
+          </div>
+        </div>
+
+        <!-- RESULT CARD -->
+        <div class="dq-result-card" id="quiz-result-card">
+          <div class="dq-result-emoji" id="res-emoji">🎉</div>
+          <div class="dq-result-score" id="res-score">5/5</div>
+          <div class="dq-result-label" id="res-desc">Hebat sekali! Semua pertanyaan berhasil dijawab dengan benar!</div>
+          <div class="dq-pts-row">
+            <div class="dq-pts-chip chip-orange">⭐ +30 Poin</div>
+            <div class="dq-pts-chip chip-fire" id="res-streak-chip">🔥 1 Hari Streak</div>
+          </div>
+          <button class="btn-teal" style="margin-top: 15px;" onclick="closeQuizResult()">Kembali Ke Dashboard</button>
+        </div>
+
       </div>
 
-      <!-- QUICK QUIZ -->
-      <div class="glass-card quiz-card" id="card-quiz">
-        <div class="card-header">
-          <span class="card-badge purple">🎯 Quiz Center</span>
-          <span class="card-badge green">+30–50 Poin</span>
+      <!-- ARCHIVE OF COMPLETED QUIZZES -->
+      <div class="archive-section" id="challenge-archive">
+        <h2>📅 Arsip Tantangan Sebelumnya</h2>
+        <div class="archive-grid" id="archive-container">
+          <div class="archive-card done-card">
+            <div class="arch-top"><span class="badge-green">✅ Selesai</span><span class="arch-pts">+30 Poin</span></div>
+            <h4>Tantangan Kemarin</h4>
+            <p>Memahami selektor dasar CSS & box model.</p>
+          </div>
+          <div class="archive-card done-card">
+            <div class="arch-top"><span class="badge-green">✅ Selesai</span><span class="arch-pts">+30 Poin</span></div>
+            <h4>Tantangan 2 Hari Lalu</h4>
+            <p>Mendeklarasikan tag semantik navigasi & footer HTML5.</p>
+          </div>
+          <div class="archive-card done-card">
+            <div class="arch-top"><span class="badge-green">✅ Selesai</span><span class="arch-pts">+30 Poin</span></div>
+            <h4>Tantangan 3 Hari Lalu</h4>
+            <p>Mempelajari operasi logika dasar JavaScript.</p>
+          </div>
         </div>
-        <h3 style="margin: 14px 0 6px; font-size: 1.15rem; font-weight: 800;">Uji Pemahaman</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">Selesaikan kuis per topik untuk naik level dan buka materi berikutnya.</p>
-        <div class="quiz-preview" id="quiz-preview-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
-          <div class="qp-item" id="qp-html" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);">📝 HTML Basics — 5 soal</div>
-          <div class="qp-item" id="qp-css" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);">🎨 CSS Styling — 5 soal</div>
-          <div class="qp-item qp-locked" id="qp-js" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); opacity: 0.5;">🔒 JavaScript — Terkunci</div>
-        </div>
-        <a href="quiz.html" class="btn-teal" id="cta-quiz">Mulai Quiz →</a>
       </div>
 
     </section>
 
-    <!-- FOOTER -->
     <footer class="main-footer" id="footer">
       <p>© 2026 DevPath · Dibuat dengan ❤️ oleh siswa kelas 10 · Jalur belajar untuk semua</p>
     </footer>
-
   </main>
 
   <script src="script.js"></script>
   <script>
-  document.addEventListener('DOMContentLoaded', () => {
+    // =============================================
+    // ENGINE QUIZ HARIAN AI – daily.html
+    // =============================================
 
-    // ── Greeting by time ──
-    const hour = new Date().getHours();
-    const greet = hour < 5 ? 'Selamat malam! 🌙' : hour < 12 ? 'Selamat pagi! ☀️' : hour < 15 ? 'Selamat siang! 🌤️' : hour < 18 ? 'Selamat sore! 🌅' : 'Selamat malam! 🌙';
-    const greetEl = document.getElementById('topbar-greeting');
-    if (greetEl) greetEl.textContent = greet;
+    let quizData = [];
+    let answersState = Array(5).fill(null); // stores index of selected options for each of the 5 questions
 
-    // ── Stats strip ──
-    const streak = dpGetInt('streak', 0);
-    const pts    = dpGetInt('points', 0);
-    const { lv, name, next, nextPts } = getLevel(pts);
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set date label
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      document.getElementById('quiz-date-lbl').textContent = new Date().toLocaleDateString('id-ID', options);
 
-    const animateNum = (el, val) => {
-      if (!el) return;
-      let start = 0;
-      const dur = 800;
-      const t0  = performance.now();
-      const step = ts => {
-        const p = Math.min((ts - t0) / dur, 1);
-        el.textContent = Math.round(p * val);
-        if (p < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
-    };
-
-    animateNum(document.getElementById('strip-streak'), streak);
-    animateNum(document.getElementById('strip-points'), pts);
-    const sl  = document.getElementById('strip-level');
-    const sln = document.getElementById('strip-level-name');
-    if (sl)  sl.textContent  = `Lv ${lv.split(' ')[1]}`;
-    if (sln) sln.textContent = name;
-
-    // Completed quizzes count
-    const cq = JSON.parse(localStorage.getItem('devpath_completed_quizzes') || '[]');
-    animateNum(document.getElementById('strip-quizzes'), cq.length);
-
-    // ── Quick actions ──
-    const qaStreakBadge = document.getElementById('qa-streak-badge');
-    const qaStreakDesc  = document.getElementById('qa-streak-desc');
-    if (qaStreakBadge) qaStreakBadge.textContent = streak + ' Hari';
-    if (qaStreakDesc)  qaStreakDesc.textContent  = streak > 0 ? `🔥 ${streak} hari berturut!` : 'Jaga konsistensimu!';
-
-    const dailyDone = dpGet('daily_done') === new Date().toDateString();
-    const qaDailyBadge = document.getElementById('qa-daily-badge');
-    if (qaDailyBadge) qaDailyBadge.textContent = dailyDone ? '✅ Selesai' : 'Belum';
-    if (qaDailyBadge && dailyDone) { qaDailyBadge.style.background = 'rgba(6,214,160,0.15)'; qaDailyBadge.style.color = 'var(--green)'; qaDailyBadge.style.borderColor = 'rgba(6,214,160,0.3)'; }
-
-    // ── Level progress in card ──
-    const lvFoot = document.getElementById('level-label-foot');
-    const lvNext = document.getElementById('level-next-foot');
-    const lvFill = document.getElementById('level-prog-fill');
-    if (lvFoot) lvFoot.textContent = `${lv} – ${name}`;
-    if (next) {
-      if (lvNext) lvNext.textContent = `${nextPts} poin lagi → Lv ${parseInt(lv.split(' ')[1]) + 1}`;
-      const thresholds = [0, 50, 100, 200, 350, 500];
-      const lvNum = parseInt(lv.split(' ')[1]) - 1;
-      const prev  = thresholds[lvNum] || 0;
-      const pct   = Math.min(100, Math.round(((pts - prev) / (next - prev)) * 100));
-      if (lvFill) lvFill.style.width = pct + '%';
-    } else {
-      if (lvNext) lvNext.textContent = '🏆 MAX LEVEL';
-      if (lvFill) lvFill.style.width = '100%';
-    }
-
-    // ── Quiz preview cards ──
-    const cats     = ['html', 'css', 'javascript'];
-    const qpIds    = ['qp-html', 'qp-css', 'qp-js'];
-    const qpLabels = ['📝 HTML Basics — 5 soal', '🎨 CSS Styling — 5 soal', '⚡ JavaScript — 5 soal'];
-    cats.forEach((cat, i) => {
-      const el = document.getElementById(qpIds[i]);
-      if (!el) return;
-      if (cq.includes(cat)) {
-        el.innerHTML = qpLabels[i] + ' ✅';
-        el.classList.remove('qp-locked');
-        el.style.color = 'var(--green)';
-      } else if (i > 0 && !cq.includes(cats[i-1])) {
-        el.textContent = '🔒 ' + (['HTML Basics','CSS Styling','JavaScript'][i]) + ' — Terkunci';
-        el.classList.add('qp-locked');
-      } else {
-        el.textContent = qpLabels[i];
-        el.classList.remove('qp-locked');
-        el.style.color = '';
+      // Load Saved API key
+      const savedKey = localStorage.getItem('devpath_gemini_api_key');
+      if (savedKey) {
+        document.getElementById('gemini-key-input').value = savedKey;
+        document.getElementById('btn-save-key').textContent = 'Hapus Key';
+        document.getElementById('btn-save-key').classList.add('btn-ghost');
       }
+
+      // Check if already completed today
+      const today = new Date().toDateString();
+      const dailyDone = localStorage.getItem('devpath_daily_done') === today;
+
+      if (dailyDone) {
+        document.getElementById('done-banner').classList.add('show');
+        document.getElementById('quiz-body').classList.remove('show');
+      } else {
+        loadDailyQuiz();
+      }
+
+      // Initialize streak dots and stats
+      updateSharedStats();
+      renderStreakDots('streak-dots');
     });
 
-    // ── Daily status badge ──
-    const statusWrap = document.getElementById('daily-status-wrap');
-    if (statusWrap) {
-      statusWrap.innerHTML = dailyDone
-        ? `<span class="daily-status-badge daily-done-badge">✅ Quiz harian selesai!</span>`
-        : `<span class="daily-status-badge daily-pending-badge">⭕ Belum dikerjakan hari ini</span>`;
+    function saveApiKey() {
+      const input = document.getElementById('gemini-key-input');
+      const btn = document.getElementById('btn-save-key');
+      const savedKey = localStorage.getItem('devpath_gemini_api_key');
+
+      if (savedKey) {
+        localStorage.removeItem('devpath_gemini_api_key');
+        input.value = '';
+        btn.textContent = 'Simpan Key';
+        btn.classList.remove('btn-ghost');
+        alert('Kunci API Gemini telah dihapus. Sistem akan menggunakan Demo Mode.');
+      } else {
+        const val = input.value.trim();
+        if (!val) {
+          alert('Harap masukkan API Key yang valid!');
+          return;
+        }
+        localStorage.setItem('devpath_gemini_api_key', val);
+        btn.textContent = 'Hapus Key';
+        btn.classList.add('btn-ghost');
+        alert('API Key Gemini berhasil disimpan! Sistem akan memuat kuis dari AI.');
+      }
+      loadDailyQuiz();
     }
 
-    // ── Hero floating particles ──
-    const hero = document.getElementById('dash-hero');
-    if (hero) {
-      for (let i = 0; i < 8; i++) {
-        const p = document.createElement('div');
-        p.className = 'hero-particle';
-        const size = Math.random() * 6 + 3;
-        p.style.cssText = `
-          width:${size}px; height:${size}px;
-          left:${Math.random() * 80 + 10}%;
-          bottom:0;
-          animation-duration:${Math.random() * 8 + 6}s;
-          animation-delay:${Math.random() * 5}s;
-          opacity:${Math.random() * 0.2 + 0.05};
-        `;
-        hero.appendChild(p);
+    // BANK SOAL FALLBACK (Demo Mode)
+    const DEMO_QUESTIONS = [
+      {
+        q: "Manakah dari tag HTML berikut yang digunakan untuk membuat baris baru (line break)?",
+        opts: ["&lt;lb&gt;", "&lt;break&gt;", "&lt;br&gt;", "&lt;p&gt;"],
+        ans: 2,
+        exp: "Tag &lt;br&gt; digunakan untuk menyisipkan pemisah baris tunggal (line break) secara langsung."
+      },
+      {
+        q: "Properti CSS apa yang digunakan untuk merubah warna latar belakang sebuah elemen?",
+        opts: ["color", "background-color", "bgcolor", "background-image"],
+        ans: 1,
+        exp: "Properti background-color digunakan untuk mewarnai latar belakang. Properti color digunakan khusus untuk warna teks."
+      },
+      {
+        q: "Bagaimana cara menulis komentar satu baris di dalam file JavaScript?",
+        opts: ["// Komentar ini", "/* Komentar ini */", "&lt;!-- Komentar ini --&gt;", "# Komentar ini"],
+        ans: 0,
+        exp: "Garis miring ganda (//) digunakan untuk mendeklarasikan komentar satu baris di JavaScript."
+      },
+      {
+        q: "Properti CSS apa yang memberikan jarak di luar batas border suatu elemen?",
+        opts: ["padding", "margin", "border-spacing", "gap"],
+        ans: 1,
+        exp: "Margin memberikan jarak kosong di luar batas border elemen, sedangkan padding memberikan jarak di dalam elemen."
+      },
+      {
+        q: "Manakah deklarasi variabel JavaScript modern yang nilainya tidak dapat diubah (konstan)?",
+        opts: ["var x = 10;", "let x = 10;", "const x = 10;", "int x = 10;"],
+        ans: 2,
+        exp: "Kata kunci 'const' digunakan untuk mendeklarasikan variabel bernilai tetap (konstan) yang tidak bisa di-reassign kembali."
+      }
+    ];
+
+    async function loadDailyQuiz() {
+      document.getElementById('quiz-loading').style.display = 'flex';
+      document.getElementById('quiz-body').classList.remove('show');
+      document.getElementById('quiz-result-card').classList.remove('show');
+
+      const apiKey = localStorage.getItem('devpath_gemini_api_key');
+      if (!apiKey) {
+        // Mode Demo
+        setTimeout(() => {
+          quizData = DEMO_QUESTIONS;
+          renderQuizQuestions();
+          document.getElementById('quiz-loading').style.display = 'none';
+          document.getElementById('quiz-body').classList.add('show');
+        }, 1200);
+        return;
+      }
+
+      // Gemini AI request
+      const prompt = `Buat tepat 5 soal kuis pilihan ganda tentang coding web (HTML, CSS, atau JavaScript) tingkat dasar untuk siswa SMK kelas 10 di Indonesia. Soal harus cukup mudah dikerjakan dan membangkitkan rasa percaya diri mereka dalam belajar pemrograman. Format output HARUS wajib berupa JSON array of objects secara langsung tanpa pembungkus markdown markdown (\`\`\`json ... \`\`\`), memiliki kunci persis: "q" (pertanyaan), "opts" (array isi 4 pilihan jawaban berupa string), "ans" (indeks angka pilihan yang benar dari 0 sampai 3), dan "exp" (penjelasan singkat mengapa jawaban tersebut benar). Semua konten wajib menggunakan Bahasa Indonesia.`;
+
+      try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              responseMimeType: "application/json"
+            }
+          })
+        });
+
+        if (!res.ok) throw new Error('API request failed');
+        const data = await res.json();
+        const jsonText = data.candidates[0].content.parts[0].text;
+        quizData = JSON.parse(jsonText.trim());
+
+        renderQuizQuestions();
+        document.getElementById('quiz-loading').style.display = 'none';
+        document.getElementById('quiz-body').classList.add('show');
+      } catch (err) {
+        console.error('Error generating quiz from AI, falling back to offline bank:', err);
+        // Fallback silently to offline questions
+        quizData = DEMO_QUESTIONS;
+        renderQuizQuestions();
+        document.getElementById('quiz-loading').style.display = 'none';
+        document.getElementById('quiz-body').classList.add('show');
       }
     }
-  });
+
+    function renderQuizQuestions() {
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+      answersState = Array(quizData.length).fill(null);
+      document.getElementById('btn-submit-quiz').disabled = true;
+
+      quizData.forEach((soal, qIdx) => {
+        const card = document.createElement('div');
+        card.className = 'dq-question-card';
+        card.id = `qcard-${qIdx}`;
+
+        let optsHtml = '';
+        const letters = ['A', 'B', 'C', 'D'];
+        soal.opts.forEach((opt, optIdx) => {
+          optsHtml += `
+            <button class="dq-opt" onclick="selectOption(${qIdx}, ${optIdx})" id="opt-${qIdx}-${optIdx}">
+              <span class="opt-letter">${letters[optIdx]}</span>
+              <span>${opt}</span>
+            </button>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="dq-q-num">PERTANYAAN ${qIdx + 1} DARI ${quizData.length}</div>
+          <div class="dq-q-text">${soal.q}</div>
+          <div class="dq-opts">${optsHtml}</div>
+          <div class="dq-explanation" id="exp-${qIdx}">
+            <strong>Penjelasan:</strong> ${soal.exp}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function selectOption(qIdx, optIdx) {
+      if (answersState[qIdx] !== null) return; // already answered this question
+
+      answersState[qIdx] = optIdx;
+      const correctIdx = quizData[qIdx].ans;
+      const isCorrect = optIdx === correctIdx;
+
+      // Disable all options and highlight correct/wrong
+      for (let i = 0; i < 4; i++) {
+        const btn = document.getElementById(`opt-${qIdx}-${i}`);
+        btn.disabled = true;
+        if (i === correctIdx) {
+          btn.classList.add('correct');
+        } else if (i === optIdx && !isCorrect) {
+          btn.classList.add('wrong');
+        }
+      }
+
+      // Show explanation card
+      const expBox = document.getElementById(`exp-${qIdx}`);
+      expBox.classList.add('show');
+      expBox.classList.add(isCorrect ? 'ok' : 'err');
+
+      // Check if all answered
+      const allAnswered = answersState.every(ans => ans !== null);
+      if (allAnswered) {
+        document.getElementById('btn-submit-quiz').disabled = false;
+      }
+    }
+
+    function submitQuiz() {
+      // Calculate score
+      let score = 0;
+      quizData.forEach((soal, i) => {
+        if (answersState[i] === soal.ans) score++;
+      });
+
+      // Award points and streak
+      const currentPts = parseInt(localStorage.getItem('devpath_points') || '0', 10);
+      localStorage.setItem('devpath_points', currentPts + 30);
+
+      // Increment daily streak through shared function
+      const newStreak = completeDailyChallenge();
+
+      // Show results
+      document.getElementById('quiz-body').classList.remove('show');
+      document.getElementById('done-banner').classList.add('show');
+
+      // Result UI
+      document.getElementById('res-score').textContent = `${score}/${quizData.length}`;
+      document.getElementById('res-streak-chip').textContent = `🔥 ${newStreak} Hari Streak`;
+
+      if (score === quizData.length) {
+        document.getElementById('res-emoji').textContent = '🎉';
+        document.getElementById('res-desc').textContent = 'Hebat sekali! Semua pertanyaan berhasil dijawab dengan benar! +30 Poin & Streak Kamu aktif!';
+      } else if (score >= 3) {
+        document.getElementById('res-emoji').textContent = '👍';
+        document.getElementById('res-desc').textContent = 'Kerja bagus! Pemahaman kamu sudah sangat baik. +30 Poin & Streak Kamu aktif!';
+      } else {
+        document.getElementById('res-emoji').textContent = '💪';
+        document.getElementById('res-desc').textContent = 'Tetap semangat! Pelajari penjelasannya untuk belajar lebih baik lagi. +30 Poin & Streak Kamu aktif!';
+      }
+
+      document.getElementById('quiz-result-card').classList.add('show');
+    }
+
+    function closeQuizResult() {
+      window.location.href = 'index.html';
+    }
+
+    function forceRegenQuiz() {
+      // Reset complete state for testing/regen
+      localStorage.removeItem('devpath_daily_done');
+      document.getElementById('done-banner').classList.remove('show');
+      loadDailyQuiz();
+    }
   </script>
 </body>
+
 </html>
