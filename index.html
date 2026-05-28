@@ -7,57 +7,8 @@
   <meta name="description" content="DevPath adalah platform belajar coding interaktif untuk siswa kelas 10. Ikuti roadmap, kerjakan kuis, dan jaga Daily Streak-mu!"/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="style.css"/>
-  <style>
-    /* ── Dashboard Extra ── */
-    .streak-card small { color: var(--text-muted); font-size: 0.75rem; margin-top: 4px; display: block; }
-
-    /* Animate streak number when it increments */
-    @keyframes streak-pop {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(1.25); color: var(--orange); }
-      100% { transform: scale(1); }
-    }
-    .streak-pop { animation: streak-pop .5s ease; }
-
-    /* Level progress bar in stat card */
-    .level-prog-wrap { width: 100%; height: 5px; background: var(--surface2); border-radius: 50px; margin-top: 6px; overflow: hidden; }
-    .level-prog-fill { height: 100%; border-radius: 50px; background: linear-gradient(90deg, var(--teal), #7defe6); transition: width .8s ease; }
-    .level-next-hint { font-size: 0.7rem; color: var(--text-muted); margin-top: 3px; }
-
-    /* Daily status badge */
-    .daily-status-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 5px 14px; border-radius: 50px; font-size: 0.78rem; font-weight: 700;
-      margin-top: 4px;
-    }
-    .daily-done-badge { background: rgba(87,204,153,.18); color: var(--green); border: 1px solid rgba(87,204,153,.3); }
-    .daily-pending-badge { background: rgba(244,162,97,.15); color: var(--orange); border: 1px solid rgba(244,162,97,.3); animation: pulse-border 2s infinite; }
-    @keyframes pulse-border { 0%,100%{box-shadow:0 0 0 0 rgba(244,162,97,.35)} 50%{box-shadow:0 0 0 5px rgba(244,162,97,0)} }
-
-    /* Stats strip */
-    .dash-stats-strip {
-      display: grid; grid-template-columns: repeat(4,1fr); gap: 14px;
-      padding: 0 32px 16px;
-    }
-    .stat-strip-card {
-      background: var(--surface); border-radius: 14px; padding: 18px 20px;
-      border: 1px solid var(--border); display: flex; align-items: center; gap: 14px;
-      transition: transform .3s, box-shadow .3s;
-    }
-    .stat-strip-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,.3); }
-    .stat-strip-icon { font-size: 1.8rem; }
-    .stat-strip-val { font-size: 1.4rem; font-weight: 900; line-height: 1; }
-    .stat-strip-lbl { font-size: 0.75rem; color: var(--text-muted); margin-top: 3px; }
-
-    @media (max-width: 900px) {
-      .dash-stats-strip { grid-template-columns: repeat(2,1fr); padding: 0 20px 16px; }
-    }
-    @media (max-width: 540px) {
-      .dash-stats-strip { grid-template-columns: 1fr 1fr; }
-    }
-  </style>
 </head>
 <body>
 
@@ -128,45 +79,47 @@
 
     <!-- HERO GREETING -->
     <section class="dash-hero" id="dash-hero">
+      <!-- Floating particles (injected by JS) -->
       <div class="dash-hero-text">
-        <div class="hero-badge-pill">🚀 Jalur Belajar Interaktif</div>
+        <div class="greeting-badge">🚀 Jalur Belajar Interaktif untuk Kelas 10</div>
         <h2>Mulai Hari Ini,<br/><span class="teal-text">Jadi Developer</span> Besok!</h2>
-        <p>Ikuti roadmap, kerjakan kuis harian AI, dan jaga streak-mu. Setiap hari kecil membawa perubahan besar.</p>
-        <div style="display:flex;gap:12px;flex-wrap:wrap;">
-          <a href="roadmap.html" class="btn-teal" id="cta-roadmap">Lihat Roadmap →</a>
+        <p>Ikuti roadmap terstruktur, kerjakan kuis AI harian, dan jaga streak-mu. Setiap langkah kecil membawa perubahan besar.</p>
+        <div class="dash-hero-cta">
+          <a href="roadmap.html" class="btn-teal" id="cta-roadmap">🗺️ Lihat Roadmap</a>
           <a href="daily.html" class="btn-orange" id="cta-daily-hero">⚡ Quiz Harian</a>
         </div>
       </div>
       <div class="dash-hero-visual">
-        <div class="progress-card" id="progress-card">
-          <div class="pcard-header">📈 Progress Belajar</div>
+        <div class="hero-stats-card" id="progress-card">
+          <div class="shimmer"></div>
+          <div class="pcard-header" style="font-weight: 800; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); margin-bottom: 18px;">📈 Progress Belajar</div>
           <div class="pcard-item">
-            <span>HTML</span>
-            <div class="prog-bar-wrap">
-              <progress id="prog-html" value="0" max="100"></progress>
+            <div class="pcard-meta">
+              <span>HTML</span>
+              <span class="pct" id="pct-html">0%</span>
             </div>
-            <span class="pct" id="pct-html">0%</span>
+            <progress id="prog-html" value="0" max="100"></progress>
           </div>
           <div class="pcard-item">
-            <span>CSS</span>
-            <div class="prog-bar-wrap">
-              <progress id="prog-css" value="0" max="100"></progress>
+            <div class="pcard-meta">
+              <span>CSS</span>
+              <span class="pct" id="pct-css">0%</span>
             </div>
-            <span class="pct" id="pct-css">0%</span>
+            <progress id="prog-css" value="0" max="100"></progress>
           </div>
           <div class="pcard-item">
-            <span>JavaScript</span>
-            <div class="prog-bar-wrap">
-              <progress id="prog-js" value="0" max="100"></progress>
+            <div class="pcard-meta">
+              <span>JavaScript</span>
+              <span class="pct" id="pct-js">0%</span>
             </div>
-            <span class="pct" id="pct-js">0%</span>
+            <progress id="prog-js" value="0" max="100"></progress>
           </div>
-          <div class="pcard-footer" id="level-progress-wrap">
-            <div style="display:flex;justify-content:space-between;font-size:.78rem;margin-bottom:4px;">
-              <span id="level-label-foot">Level 1 – Newbie</span>
-              <span id="level-next-foot" style="color:var(--teal)"></span>
+          <div class="level-progress-wrap" id="level-progress-wrap" style="margin-top: 18px;">
+            <div class="level-labels" style="margin-bottom: 6px;">
+              <span class="level-badge" id="level-label-foot">Level 1 – Newbie</span>
+              <span class="level-hint" id="level-next-foot"></span>
             </div>
-            <div class="level-prog-wrap"><div class="level-prog-fill" id="level-prog-fill" style="width:0%"></div></div>
+            <div class="level-bar"><div class="level-bar-fill" id="level-prog-fill" style="width:0%"></div></div>
           </div>
         </div>
       </div>
@@ -204,49 +157,90 @@
       </div>
     </section>
 
+    <!-- QUICK ACTIONS -->
+    <section class="dash-quick-actions" id="dash-quick-actions">
+      <a href="roadmap.html" class="quick-action-card" id="qa-roadmap">
+        <span class="qa-icon">🗺️</span>
+        <div>
+          <div class="qa-title">The Roadmap</div>
+          <div class="qa-desc">HTML → CSS → JavaScript</div>
+        </div>
+        <span class="qa-badge">3 Stage</span>
+      </a>
+      <a href="quiz.html" class="quick-action-card" id="qa-quiz">
+        <span class="qa-icon">🎯</span>
+        <div>
+          <div class="qa-title">Quiz Center</div>
+          <div class="qa-desc">Uji pemahaman per topik</div>
+        </div>
+        <span class="qa-badge" id="qa-quiz-badge">+50 Poin</span>
+      </a>
+      <a href="daily.html" class="quick-action-card" id="qa-daily">
+        <span class="qa-icon">⚡</span>
+        <div>
+          <div class="qa-title">Daily Challenge</div>
+          <div class="qa-desc">Soal baru dari AI setiap hari</div>
+        </div>
+        <span class="qa-badge" id="qa-daily-badge">Hari Ini</span>
+      </a>
+      <div class="quick-action-card" style="cursor:default;" id="qa-streak">
+        <span class="qa-icon">🔥</span>
+        <div>
+          <div class="qa-title">Streak Aktif</div>
+          <div class="qa-desc" id="qa-streak-desc">Jaga konsistensimu!</div>
+        </div>
+        <span class="qa-badge" id="qa-streak-badge">0 Hari</span>
+      </div>
+    </section>
+
     <!-- GRID CARDS -->
     <section class="dash-grid" id="dash-grid">
 
       <!-- STREAK CARD -->
-      <div class="dcard streak-card" id="card-streak">
-        <div class="dcard-icon streak-big" id="streak-anim">🔥</div>
-        <h3>Daily Streak</h3>
-        <div class="streak-number" id="streak-display">0</div>
-        <p>Hari berturut-turut belajar</p>
-        <div class="streak-mini-row" id="streak-dots"></div>
-        <div id="daily-status-wrap" style="margin-top:4px;"></div>
+      <div class="glass-card streak-card" id="card-streak">
+        <div class="card-header">
+          <span class="card-title">Daily Streak</span>
+          <span class="card-badge orange">Streak</span>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin: 10px 0;">
+          <div class="streak-big" id="streak-anim" style="font-size: 3.5rem; filter: drop-shadow(0 0 10px rgba(245,158,11,0.6));">🔥</div>
+          <div class="streak-number" id="streak-display" style="font-size: 3rem; font-weight: 900;">0</div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Hari berturut-turut belajar</p>
+        </div>
+        <div class="streak-mini-row" id="streak-dots" style="display: flex; gap: 6px; justify-content: center; margin-top: 10px;"></div>
+        <div id="daily-status-wrap" style="margin-top: 12px; text-align: center;"></div>
       </div>
 
       <!-- DAILY CHALLENGE PREVIEW -->
-      <div class="dcard challenge-card" id="card-challenge">
-        <div class="dcard-toprow">
-          <span class="badge-orange" id="daily-badge-day">⚡ Hari ini</span>
-          <span class="badge-green">+50 Poin</span>
+      <div class="glass-card challenge-card" id="card-challenge">
+        <div class="card-header">
+          <span class="card-badge orange" id="daily-badge-day">⚡ Hari ini</span>
+          <span class="card-badge green">+50 Poin</span>
         </div>
-        <h3 id="daily-challenge-title">Quiz Harian AI</h3>
-        <p class="challenge-desc" id="daily-challenge-desc">"Jawab 5 soal coding yang dibuat khusus oleh AI Gemini setiap hari. Soal berbeda tiap hari!"</p>
-        <div class="code-preview-box">
-          <span class="c-comm">// 🤖 Gemini AI menghasilkan soal baru</span><br/>
-          <span class="c-comm">// setiap hari secara otomatis</span><br/>
-          <span class="c-tag">const</span> <span class="c-attr">quiz</span> = <span class="c-str">await</span> <span class="c-text">gemini</span>.<span class="c-tag">generate</span>(<br/>
-          &nbsp;&nbsp;<span class="c-str">"Buat 5 soal HTML/CSS/JS"</span><br/>
+        <h3 id="daily-challenge-title" style="margin: 14px 0 6px; font-size: 1.15rem; font-weight: 800;">Quiz Harian AI</h3>
+        <p class="challenge-desc" id="daily-challenge-desc" style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">"Jawab 5 soal coding yang dibuat khusus oleh AI Gemini setiap hari. Soal berbeda tiap hari!"</p>
+        <div class="code-preview-box" style="background: rgba(0,0,0,0.25); padding: 14px; border-radius: 10px; border: 1px solid var(--border); font-family: 'Fira Code', monospace; font-size: 0.76rem; line-height: 1.5; margin-bottom: 16px; overflow-x: auto;">
+          <span class="c-comm" style="color: #6a9955;">// 🤖 Gemini AI menghasilkan soal baru</span><br/>
+          <span class="c-comm" style="color: #6a9955;">// setiap hari secara otomatis</span><br/>
+          <span class="c-tag" style="color: #569cd6;">const</span> <span class="c-attr" style="color: #9cdcfe;">quiz</span> = <span class="c-str" style="color: #ce9178;">await</span> <span class="c-text">gemini</span>.<span class="c-tag" style="color: #dcdcaa;">generate</span>(<br/>
+          &nbsp;&nbsp;<span class="c-str" style="color: #ce9178;">"Buat 5 soal HTML/CSS/JS"</span><br/>
           );
         </div>
         <a href="daily.html" class="btn-orange" id="cta-daily">Mulai Quiz Harian →</a>
       </div>
 
       <!-- QUICK QUIZ -->
-      <div class="dcard quiz-card" id="card-quiz">
-        <div class="dcard-toprow">
-          <span class="badge-teal">🎯 Quiz Center</span>
-          <span class="badge-green">+30–50 Poin</span>
+      <div class="glass-card quiz-card" id="card-quiz">
+        <div class="card-header">
+          <span class="card-badge purple">🎯 Quiz Center</span>
+          <span class="card-badge green">+30–50 Poin</span>
         </div>
-        <h3>Uji Pemahaman</h3>
-        <p>Selesaikan kuis per topik untuk naik level dan buka materi berikutnya.</p>
-        <div class="quiz-preview" id="quiz-preview-list">
-          <div class="qp-item" id="qp-html">📝 HTML Basics — 5 soal</div>
-          <div class="qp-item" id="qp-css">🎨 CSS Styling — 5 soal</div>
-          <div class="qp-item qp-locked" id="qp-js">🔒 JavaScript — Terkunci</div>
+        <h3 style="margin: 14px 0 6px; font-size: 1.15rem; font-weight: 800;">Uji Pemahaman</h3>
+        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 16px;">Selesaikan kuis per topik untuk naik level dan buka materi berikutnya.</p>
+        <div class="quiz-preview" id="quiz-preview-list" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px;">
+          <div class="qp-item" id="qp-html" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);">📝 HTML Basics — 5 soal</div>
+          <div class="qp-item" id="qp-css" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border);">🎨 CSS Styling — 5 soal</div>
+          <div class="qp-item qp-locked" id="qp-js" style="font-size: 0.85rem; padding: 8px 12px; border-radius: 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); opacity: 0.5;">🔒 JavaScript — Terkunci</div>
         </div>
         <a href="quiz.html" class="btn-teal" id="cta-quiz">Mulai Quiz →</a>
       </div>
@@ -262,55 +256,74 @@
 
   <script src="script.js"></script>
   <script>
-  // ── Dashboard-specific extra updates ──
   document.addEventListener('DOMContentLoaded', () => {
 
-    // Greeting by time
+    // ── Greeting by time ──
     const hour = new Date().getHours();
-    const greet = hour < 12 ? 'Selamat pagi! ☀️' : hour < 15 ? 'Selamat siang! 🌤️' : hour < 18 ? 'Selamat sore! 🌅' : 'Selamat malam! 🌙';
+    const greet = hour < 5 ? 'Selamat malam! 🌙' : hour < 12 ? 'Selamat pagi! ☀️' : hour < 15 ? 'Selamat siang! 🌤️' : hour < 18 ? 'Selamat sore! 🌅' : 'Selamat malam! 🌙';
     const greetEl = document.getElementById('topbar-greeting');
     if (greetEl) greetEl.textContent = greet;
 
-    // Stats strip
+    // ── Stats strip ──
     const streak = dpGetInt('streak', 0);
     const pts    = dpGetInt('points', 0);
     const { lv, name, next, nextPts } = getLevel(pts);
 
-    const ss = document.getElementById('strip-streak');
-    const sp = document.getElementById('strip-points');
-    const sl = document.getElementById('strip-level');
+    const animateNum = (el, val) => {
+      if (!el) return;
+      let start = 0;
+      const dur = 800;
+      const t0  = performance.now();
+      const step = ts => {
+        const p = Math.min((ts - t0) / dur, 1);
+        el.textContent = Math.round(p * val);
+        if (p < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    };
+
+    animateNum(document.getElementById('strip-streak'), streak);
+    animateNum(document.getElementById('strip-points'), pts);
+    const sl  = document.getElementById('strip-level');
     const sln = document.getElementById('strip-level-name');
-    if (ss) ss.textContent = streak;
-    if (sp) sp.textContent = pts;
-    if (sl) sl.textContent = `Lv ${lv.split(' ')[1]}`;
+    if (sl)  sl.textContent  = `Lv ${lv.split(' ')[1]}`;
     if (sln) sln.textContent = name;
 
     // Completed quizzes count
     const cq = JSON.parse(localStorage.getItem('devpath_completed_quizzes') || '[]');
-    const sq = document.getElementById('strip-quizzes');
-    if (sq) sq.textContent = cq.length;
+    animateNum(document.getElementById('strip-quizzes'), cq.length);
 
-    // Level progress fill in progress card
+    // ── Quick actions ──
+    const qaStreakBadge = document.getElementById('qa-streak-badge');
+    const qaStreakDesc  = document.getElementById('qa-streak-desc');
+    if (qaStreakBadge) qaStreakBadge.textContent = streak + ' Hari';
+    if (qaStreakDesc)  qaStreakDesc.textContent  = streak > 0 ? `🔥 ${streak} hari berturut!` : 'Jaga konsistensimu!';
+
+    const dailyDone = dpGet('daily_done') === new Date().toDateString();
+    const qaDailyBadge = document.getElementById('qa-daily-badge');
+    if (qaDailyBadge) qaDailyBadge.textContent = dailyDone ? '✅ Selesai' : 'Belum';
+    if (qaDailyBadge && dailyDone) { qaDailyBadge.style.background = 'rgba(6,214,160,0.15)'; qaDailyBadge.style.color = 'var(--green)'; qaDailyBadge.style.borderColor = 'rgba(6,214,160,0.3)'; }
+
+    // ── Level progress in card ──
     const lvFoot = document.getElementById('level-label-foot');
     const lvNext = document.getElementById('level-next-foot');
     const lvFill = document.getElementById('level-prog-fill');
     if (lvFoot) lvFoot.textContent = `${lv} – ${name}`;
     if (next) {
       if (lvNext) lvNext.textContent = `${nextPts} poin lagi → Lv ${parseInt(lv.split(' ')[1]) + 1}`;
-      // Fill = how far from prev threshold to next
       const thresholds = [0, 50, 100, 200, 350, 500];
       const lvNum = parseInt(lv.split(' ')[1]) - 1;
-      const prev = thresholds[lvNum] || 0;
-      const pct = Math.min(100, Math.round(((pts - prev) / (next - prev)) * 100));
+      const prev  = thresholds[lvNum] || 0;
+      const pct   = Math.min(100, Math.round(((pts - prev) / (next - prev)) * 100));
       if (lvFill) lvFill.style.width = pct + '%';
     } else {
       if (lvNext) lvNext.textContent = '🏆 MAX LEVEL';
       if (lvFill) lvFill.style.width = '100%';
     }
 
-    // Quiz preview cards
-    const cats = ['html', 'css', 'javascript'];
-    const qpIds = ['qp-html', 'qp-css', 'qp-js'];
+    // ── Quiz preview cards ──
+    const cats     = ['html', 'css', 'javascript'];
+    const qpIds    = ['qp-html', 'qp-css', 'qp-js'];
     const qpLabels = ['📝 HTML Basics — 5 soal', '🎨 CSS Styling — 5 soal', '⚡ JavaScript — 5 soal'];
     cats.forEach((cat, i) => {
       const el = document.getElementById(qpIds[i]);
@@ -329,13 +342,31 @@
       }
     });
 
-    // Daily status badge
-    const dailyDone = dpGet('daily_done') === new Date().toDateString();
+    // ── Daily status badge ──
     const statusWrap = document.getElementById('daily-status-wrap');
     if (statusWrap) {
       statusWrap.innerHTML = dailyDone
         ? `<span class="daily-status-badge daily-done-badge">✅ Quiz harian selesai!</span>`
         : `<span class="daily-status-badge daily-pending-badge">⭕ Belum dikerjakan hari ini</span>`;
+    }
+
+    // ── Hero floating particles ──
+    const hero = document.getElementById('dash-hero');
+    if (hero) {
+      for (let i = 0; i < 8; i++) {
+        const p = document.createElement('div');
+        p.className = 'hero-particle';
+        const size = Math.random() * 6 + 3;
+        p.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${Math.random() * 80 + 10}%;
+          bottom:0;
+          animation-duration:${Math.random() * 8 + 6}s;
+          animation-delay:${Math.random() * 5}s;
+          opacity:${Math.random() * 0.2 + 0.05};
+        `;
+        hero.appendChild(p);
+      }
     }
   });
   </script>
